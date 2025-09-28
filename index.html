@@ -830,7 +830,13 @@
     function populateVoices() {
       if (!voiceSelect) return;
       let voices = speechSynthesis.getVoices().filter(v => /google/i.test(v.name));
-      // Build label with descriptive info
+
+      if (!voices.length) {
+        // Retry shortly if voices are not loaded yet
+        setTimeout(populateVoices, 500);
+        return;
+      }
+
       function makeLabel(v) {
         let label = v.name;
         let desc = [];
@@ -847,7 +853,11 @@
         else label += " (" + v.lang + ")";
         return label;
       }
-      voiceSelect.innerHTML = voices.map(v => `<option value="${v.name}">${makeLabel(v)}</option>`).join("");
+
+      voiceSelect.innerHTML = voices
+        .map(v => `<option value="${v.name}">${makeLabel(v)}</option>`)
+        .join("");
+
       // Default to Google US English if available
       let defaultVoiceName = "Google US English";
       const usDefault = voices.find(v => v.name === defaultVoiceName);
@@ -860,6 +870,10 @@
         voiceSelect.value = voices[0].name;
       }
     }
+
+    // Wake up voices on some browsers
+    speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+
     populateVoices();
     speechSynthesis.onvoiceschanged = populateVoices;
     if (voiceSelect) {
