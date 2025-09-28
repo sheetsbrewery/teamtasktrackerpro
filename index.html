@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Task Tracker – Setup Guide & FAQ</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      .fade-in {
+        animation: fadeIn 1s ease-in both;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      #menu-indicator {
+        position: absolute;
+        top: -6px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid #6366f1;
+        transition: all 0.3s ease;
+        transform: translateX(0);
+      }
+      @keyframes lockShake {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(-15deg); }
+        50% { transform: rotate(15deg); }
+        75% { transform: rotate(-10deg); }
+        100% { transform: rotate(0deg); }
+      }
+      @keyframes lockBounce {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+      }
+    </style>
+    <style>
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 5rem; /* Adjust to height of sticky nav */
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Password Overlay -->
+    <div id="password-overlay" class="fixed inset-0 flex flex-col items-center justify-center bg-gray-100 z-50">
+      <div id="lock-icon" class="text-6xl mb-6 text-gray-700 transition-transform duration-700">
+        🔒
+      </div>
+      <div class="relative mb-4 w-64">
+        <input id="password-input" type="password" placeholder="Enter password"
+          class="px-4 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10" />
+        <button type="button" id="toggle-password"
+          class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-indigo-600 focus:outline-none"
+          aria-label="Show password">
+          <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </button>
+      </div>
+      <button id="password-button"
+        class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700 transition">
+        Unlock
+      </button>
+      <p id="password-error" class="text-red-500 mt-3 hidden">Incorrect password, try again.</p>
+    </div>
+
+    <!-- Main Site Content (hidden until unlocked) -->
+    <div id="site-content" class="hidden">
+
+    <!-- Hero -->
+    <header
+      class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20 text-center fade-in"
+    >
+      <h2
+        class="text-5xl font-extrabold mb-2 animate__animated animate__fadeInDown"
+      >
+        Welcome to Your Team Task Tracker
+      </h2>
+      <p
+        class="text-xl mb-4 opacity-90 animate__animated animate__fadeInDown animate__delay-1s"
+      >
+        Streamline your workflow, boost productivity, and keep your team
+        aligned.
+      </p>
+      <p
+        class="max-w-2xl mx-auto text-lg mb-6 opacity-90 animate__animated animate__fadeInDown animate__delay-2s"
+      >
+        Setup instructions, tips, and FAQs — everything you need to get started
+        🚀
+      </p>
+      <a
+        href="https://docs.google.com/spreadsheets/d/1EtryUf_8Ez9dpfVxJMWafHV95VCRmacsGBftemBGPKE/copy?usp=sharing"
+        target="_blank"
+        class="mt-6 inline-block bg-white text-indigo-600 font-semibold px-8 py-4 rounded-lg shadow-lg hover:bg-gray-100 transform transition-transform duration-300 hover:scale-105 animate__animated animate__fadeInUp animate__delay-3s"
+      >
+        Get Your Copy
+      </a>
+    </header>
+
+    <!-- Voice Instructions Banner -->
+    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-md mb-8 text-center">
+      <p class="text-gray-700 text-lg">
+        Prefer to listen instead of reading?
+        <button id="voice-banner" class="ml-2 px-3 py-1 rounded bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
+          🔊 Hear Instructions
+        </button>
+      </p>
+    </div>
+
+    <!-- Responsive Sticky Navigation Bar -->
+    <nav class="bg-white shadow sticky top-0 z-50">
+      <!-- Desktop nav links, indicator bar removed -->
+      <div id="desktop-nav" class="hidden md:flex relative items-center h-14 px-4 space-x-4">
+        <a href="#tabs" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Tabs</span></a>
+        <a href="#teammembers" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Team Members</span></a>
+        <a href="#home" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Home</span></a>
+        <a href="#status" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Status</span></a>
+        <a href="#kanban" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Kanban</span></a>
+        <a href="#taskcentral" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Task Central</span></a>
+        <a href="#setup" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Setup</span></a>
+        <a href="#faq" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">FAQ</span></a>
+      </div>
+      <!-- Mobile toggle button and dropdown menu -->
+      <div id="menu-mobile" class="hidden md:hidden px-4 pb-4 space-y-2 bg-white border-t shadow">
+        <a href="#tabs" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Tabs</a>
+        <a href="#teammembers" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Team Members</a>
+        <a href="#home" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Home</a>
+        <a href="#status" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Status</a>
+        <a href="#kanban" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Kanban</a>
+        <a href="#taskcentral" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Task Central</a>
+        <a href="#setup" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Setup</a>
+        <a href="#faq" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">FAQ</a>
+      </div>
+      <!-- Mobile toggle button for menu -->
+      <button id="menu-toggle" class="ml-auto mr-4 md:hidden text-indigo-700 text-2xl focus:outline-none flex" aria-label="Open menu">
+        <!-- SVG for hamburger menu -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </nav>
+
+
+    <!-- Step 1: Copy & Access -->
+    <section id="copy" class="max-w-4xl mx-auto py-12 px-6 fade-in">
+      <h3 class="text-3xl font-bold text-indigo-700 mb-8">📥 Step 1: Get Your Copy</h3>
+      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+        Click the <b>Get Your Copy</b> button above to create your own version of the Team Task Tracker. Open the file in Google Sheets. Make sure you’re signed in with the Google account where you want to use the tracker.
+      </p>
+    </section>
+
+    <!-- Step 2: Google Sheets Tabs -->
+    <section id="tabs" class="max-w-4xl mx-auto py-12 px-6 fade-in">
+      <h3 class="text-3xl font-bold text-indigo-700 mb-8">📑 Step 2: Explore the Tabs</h3>
+      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+        In the template, you’ll see tabs such as…
+      </p>
+      <!-- Accordion style, consistent with FAQ/Task Central -->
+      <div>
+        <!-- Home Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">🏠</span>
+            Home
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            Center of command to create and manage tasks. Fields include Team Member, Task Name, Priority, Dates, Status, and Recurring column.
+          </div>
+        </details>
+        <!-- Team Members Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">👥</span>
+            Team Members
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            List of members with names and emails. Populates the dropdown in Home, enables email notifications and Google Calendar sync for admin, and auto‑invites guests (assignees).
+          </div>
+        </details>
+        <!-- Status Configuration Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">⚙️</span>
+            Status Configuration
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            Rename statuses. Updates automatically across Home, Kanban, counters.
+          </div>
+        </details>
+        <!-- Kanban Board Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">📊</span>
+            Kanban Board
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            Visual board that updates dynamically based on statuses defined. Helps track progress and bottlenecks.
+          </div>
+        </details>
+        <!-- Timer Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">⏰</span>
+            Timer
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            Here you configure how long before a task’s due date the email reminders should start, and at what time of day they should arrive. Reminders will keep coming until the task is completed. Task Central uses these settings to schedule notifications and calendar updates automatically for your team.
+          </div>
+        </details>
+      </div>
+    </section>
+
+
+    <!-- Step 3: Team Members -->
+    <section id="teammembers" class="max-w-4xl mx-auto py-12 px-6 fade-in">
+      <h3 class="text-3xl font-bold text-indigo-700 mb-8">👥 Step 3: Add Your Team Members</h3>
+      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+        Fill out the <b>Team Members 👥</b> tab before creating tasks in Home. This powers the assignee dropdown and email/calendar features.
+      </p>
+      <div>
+        <!-- Add Your Teammates -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">📝</span>
+            Add Your Teammates (Columns A &amp; B)
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            <ul class="list-disc pl-5 space-y-1">
+              <li><b>Column A (Name):</b> Type each person’s full name.</li>
+              <li><b>Column B (Email):</b> Enter the exact email address.</li>
+            </ul>
+          </div>
+        </details>
+        <!-- Status Column -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">📈</span>
+            Status Column (Column C)
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            Shows <b>All Clear</b> if they have no open tasks, or <b>X Pending</b> when they have tasks still in progress. Updates automatically from Home—no formulas to tweak.
+          </div>
+        </details>
+        <!-- Quick View Individual To-Dos -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">🔎</span>
+            Quick View: Individual To‑Dos
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            <ol class="list-decimal pl-6 space-y-1">
+              <li>Click the dropdown at the top‑right.</li>
+              <li>Pick a teammate’s name.</li>
+              <li>Next to it you’ll see “X Tasks Pending.”</li>
+              <li>Below, a mini‑table lists that person’s tasks.</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Step 4: Home -->
+    <section id="home" class="bg-white py-12 px-6 shadow-inner fade-in">
+      <div class="max-w-4xl mx-auto">
+        <h3 class="text-3xl font-bold text-indigo-700 mb-6">
+          🏠 Step 4: Home – Add Your First Tasks
+        </h3>
+        <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+          This is where all your task creation and updates happen. Designed for clarity and ease, the Home section lets you quickly add new tasks and manage existing ones with precision.<br><br>
+          <b>Recurring tasks are configured here</b>.
+        </p>
+        <h4 class="text-xl font-semibold text-indigo-600 mb-4">
+          Adding & Managing Tasks
+        </h4>
+        <div class="space-y-6">
+          <div
+            class="bg-indigo-50 border-l-4 border-indigo-400 p-5 rounded-lg fade-in"
+          >
+            <h5 class="font-semibold text-indigo-700 mb-1">Team Member</h5>
+            <p class="text-gray-700">
+              Select the responsible team member from a dropdown populated
+              dynamically from your Team Members sheet. This ensures
+              accountability and clear task ownership.
+            </p>
+          </div>
+          <div
+            class="bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-lg fade-in"
+          >
+            <h5 class="font-semibold text-yellow-700 mb-1">
+              Task Name & Description
+            </h5>
+            <p class="text-gray-700">
+              Provide a clear, concise title and detailed description for each
+              task. This helps your team understand the scope and requirements
+              at a glance.
+            </p>
+          </div>
+          <div
+            class="bg-red-50 border-l-4 border-red-400 p-5 rounded-lg fade-in"
+          >
+            <h5 class="font-semibold text-red-700 mb-1">Priority</h5>
+            <p class="text-gray-700">
+              Assign priority levels (Low, Medium, High) to help your team focus
+              on the most critical tasks first and manage workload effectively.
+            </p>
+          </div>
+          <div
+            class="bg-green-50 border-l-4 border-green-400 p-5 rounded-lg fade-in"
+          >
+            <h5 class="font-semibold text-green-700 mb-1">Start & Due Date</h5>
+            <p class="text-gray-700">
+              Choose start and due dates for each task, with options for
+              recurrence. This ensures timely progress tracking and deadline
+              adherence.
+            </p>
+          </div>
+          <div class="bg-blue-50 border-l-4 border-blue-400 p-5 rounded-lg fade-in">
+            <h5 class="font-semibold text-blue-700 mb-1">Status</h5>
+            <p class="text-gray-700">
+              Statuses are fully customizable (names and emojis) and update everywhere (Home, Kanban, counts).
+              <a href="#status" class="underline text-blue-700 hover:text-blue-900">Configure them here</a>.
+            </p>
+          </div>
+          <div class="bg-purple-50 border-l-4 border-purple-400 p-5 rounded-lg fade-in">
+            <h5 class="font-semibold text-purple-700 mb-1">Recurring</h5>
+            <p class="text-gray-700">
+              Enter a number of days in the Recurring column. When the task is marked completed (or moved to your custom final status), it will be duplicated and the new copy scheduled that many days ahead. This automates regular activities without manual re‑entry.
+            </p>
+          </div>
+        </div>
+        <div class="mt-10 space-y-6">
+          <div class="bg-white border border-gray-200 rounded-lg p-6 shadow">
+            <h4 class="text-lg font-semibold mb-2">Overview &amp; Stats</h4>
+            <p class="text-gray-700">
+              At the very top you’ll see status counts and a progress bar. Use the <b>Show Stats</b> dropdown (top‑right) to hide or show this summary anytime.
+            </p>
+          </div>
+          <div class="bg-white border border-gray-200 rounded-lg p-6 shadow">
+            <h4 class="text-lg font-semibold mb-2">Quick Filter Views</h4>
+            <p class="text-gray-700">
+              Use <b>Data → Change view</b> to quickly switch between predefined filter views. Examples include <b>Overdue</b>, <b>Due Today</b>, <b>Due in 1–2 Days</b>, <b>Due in 3–6 Days</b>, and <b>Upcoming</b>. There are also views by Status (e.g., Completed). These filters let you instantly focus on what matters most. To return to the full list, click the small <b>✖</b> in the top‑right of the sheet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 5: Status Configuration -->
+    <section id="status" class="max-w-4xl mx-auto py-12 px-6 fade-in">
+      <h3 class="text-3xl font-bold text-indigo-700 mb-8">⚙️ Step 5: Customize Your Statuses</h3>
+      <p class="mb-6 text-gray-700 text-lg max-w-3xl">
+        Define the statuses that fit your team’s workflow. Rename them, and the changes will reflect automatically across the template (Home, Kanban, stats, filters).
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300">
+          <div class="text-3xl mb-3">✏️</div>
+          <h4 class="font-semibold text-lg mb-2">Rename</h4>
+          <p class="text-gray-700">
+            Edit the status labels to match your language (e.g., “Not Started”, “In Progress”, “Blocked”, “Completed”) or your own terms.
+          </p>
+        </div>
+        <div class="bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300">
+          <div class="text-3xl mb-3">🔁</div>
+          <h4 class="font-semibold text-lg mb-2">Auto‑updates</h4>
+          <p class="text-gray-700">
+            Any change you make updates everywhere automatically—no extra setup.
+          </p>
+        </div>
+      </div>
+      <div class="mt-10 space-y-4">
+        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-5">
+          <h5 class="font-semibold text-indigo-700 mb-1">How to configure</h5>
+          <ol class="list-decimal pl-6 space-y-1 text-gray-700">
+            <li>Open the <b>Status Configuration</b> tab in the template.</li>
+            <li>Rename statuses and (optionally) add emojis.</li>
+            <li>Go back to <b>Home</b> — you’ll see the new labels in the Status column and in the top counters.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 6: Kanban Board -->
+    <section id="kanban" class="max-w-4xl mx-auto py-12 px-6 fade-in">
+      <h3 class="text-3xl font-bold text-indigo-700 mb-8">📊 Step 6: Visualize in the Kanban Board</h3>
+      <p class="mb-6 text-gray-700 text-lg max-w-3xl">
+        Visualize your tasks across fully customizable statuses in real-time. The Kanban board automatically reflects the labels and emojis you define in Status Configuration, giving you a live overview of progress, bottlenecks, and completed work.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div
+          class="bg-gray-100 rounded-xl border border-gray-300 p-6 shadow-lg flex items-center justify-center text-xl font-semibold cursor-pointer transform transition-transform duration-300 hover:animate-bounce hover:scale-105"
+          aria-label="Not Started Tasks"
+        >
+          📝 Not Started
+        </div>
+        <div
+          class="bg-yellow-100 rounded-xl border border-yellow-300 p-6 shadow-lg flex items-center justify-center text-xl font-semibold cursor-pointer transform transition-transform duration-300 hover:animate-bounce hover:scale-105"
+          aria-label="In Progress Tasks"
+        >
+          ⏳ In Progress
+        </div>
+        <div
+          class="bg-red-100 rounded-xl border border-red-300 p-6 shadow-lg flex items-center justify-center text-xl font-semibold cursor-pointer transform transition-transform duration-300 hover:animate-bounce hover:scale-105"
+          aria-label="Blocked Tasks"
+        >
+          🚧 Blocked
+        </div>
+        <div
+          class="bg-green-100 rounded-xl border border-green-300 p-6 shadow-lg flex items-center justify-center text-xl font-semibold cursor-pointer transform transition-transform duration-300 hover:animate-bounce hover:scale-105"
+          aria-label="Completed Tasks"
+        >
+          ✅ Completed
+        </div>
+      </div>
+      </div>
+      <div class="mt-8 bg-white border border-gray-200 rounded-lg p-6 shadow">
+        <h4 class="text-lg font-semibold mb-6 text-center">Color Borders = Instant Priority</h4>
+        <div class="flex flex-col md:flex-row justify-center gap-6">
+          <div class="flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-5 py-3 shadow min-w-[220px] justify-center">
+            <span class="text-2xl">🔴</span>
+            <span class="font-medium text-gray-700">High&nbsp;→&nbsp;Red border</span>
+          </div>
+          <div class="flex items-center gap-3 bg-orange-50 border border-orange-200 rounded-lg px-5 py-3 shadow min-w-[220px] justify-center">
+            <span class="text-2xl">🟠</span>
+            <span class="font-medium text-gray-700">Medium&nbsp;→&nbsp;Orange border</span>
+          </div>
+          <div class="flex items-center gap-3 bg-yellow-50 border border-yellow-200 rounded-lg px-5 py-3 shadow min-w-[220px] justify-center">
+            <span class="text-2xl">🟡</span>
+            <span class="font-medium text-gray-700">Low&nbsp;→&nbsp;Yellow border</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 7: Task Central -->
+    <section id="taskcentral" class="max-w-4xl mx-auto py-12 px-6 fade-in">
+      <h3 class="text-3xl font-bold text-indigo-700 mb-8">✨ Step 7: Use Task Central Features</h3>
+      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+        All core actions are accessible from ✨ Task Central in the menu bar. This is a <b>custom menu created by Sheets Brewery</b> using advanced Google Apps Script programming behind the scenes. It centralizes the most important functions so you don’t have to dig through multiple tabs or scripts manually. Here’s how each function works and what it does.
+      </p>
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-lg mb-8">
+        <h4 class="font-semibold text-yellow-700 mb-2">First‑time setup</h4>
+        <p class="text-gray-700">
+          The first time you use this template, you’ll need to run
+          <b>✅ Enable Email Notifications</b> from the ✨ Task Central menu.
+          Google will prompt you for permissions — this is required for the automation to work.
+          Don’t worry, we guide you through the steps in the <a href="#setup" class="underline text-yellow-700 hover:text-yellow-900">Setup &amp; Permissions</a> section below.
+        </p>
+      </div>
+      <!-- Accordion style feature list -->
+      <div>
+        <!-- Email Notifications Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">📩</span>
+            Email Notifications
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            <ul class="list-disc pl-5 space-y-1">
+              <li><b>Enable Email Notifications</b> — Activates the reminder system. Required the first time you use the template (will ask for Google permissions).</li>
+              <li><b>Check Notification Status</b> — Shows whether reminders are currently active.</li>
+              <li><b>Disable All Notifications</b> — Turns off reminders completely if you want to pause emails.</li>
+              <li><b>Refresh Notification Schedule</b> — Fixes the schedule if you change the reminder hour in the Timer ⏰ sheet.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Auto-Assign Tasks Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">👥</span>
+            Auto‑Assign Tasks
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            Automatically assigns unassigned tasks to a random team member from the Team Members sheet. Helps distribute work evenly without manual effort.
+          </p>
+        </details>
+
+        <!-- Show/Hide Completed Tasks Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">👁</span>
+            Show/Hide Completed Tasks
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            Toggles the visibility of rows marked with your completed status (or custom final status). Keeps the workspace focused on open work.
+          </p>
+        </details>
+
+        <!-- Task Row Colors Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">🎨</span>
+            Task Row Colors
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            Opens a color customization panel for task rows. You can set colors for Overdue, Due Today, and Due Soon. Once configured, colors are saved and applied automatically across the sheet.
+          </p>
+        </details>
+
+        <!-- Focus Sprint Planner Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">⏱</span>
+            Focus Sprint Planner (Bonus)
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            Opens the built‑in sprint planning tool (for those with access to the sheet). Lets you group tasks into focused sprints with timers, helping your team stay on track during work sessions. Includes <b>Pomodoro</b> and other productivity methods. Inside, you’ll also find a <b>❓ help icon</b> — click it for detailed guidance on how to use the planner effectively.
+          </p>
+        </details>
+
+        <!-- Google Calendar Sync Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">🗓</span>
+            Google Calendar Sync
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            <ul class="list-disc pl-5 space-y-1">
+              <li><b>Update Google Calendar Events</b> — One‑click manual sync. Adds new tasks with due dates and removes calendar events for tasks you’ve completed.</li>
+            </ul>
+            <p class="mt-3">
+              After you accept permissions the first time, syncing runs <b>automatically every night at 12:00 AM</b> — new tasks are added, and completed ones are removed.
+            </p>
+            <div class="mt-3 bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded">
+              <p class="text-sm">
+                <b>For your team members:</b> Each person should set this in their own Google account so invites appear automatically:
+              </p>
+              <ol class="text-sm text-gray-700 pl-5 list-decimal mt-2 space-y-1">
+                <li>Open <b>Google Calendar</b> on the web (calendar.google.com).</li>
+                <li>Click the <b>gear</b> (top‑right) → <b>Settings</b>.</li>
+                <li>In the left sidebar, select <b>Event settings</b>.</li>
+                <li>Find <b>Add invitations to my calendar</b> and choose <b>From everyone</b>.</li>
+              </ol>
+              <p class="text-xs text-gray-600 mt-2">
+                Tip: On some mobile devices, this appears under <b>Google Calendar app → ☰ → Settings → General → Add invitations to my calendar</b>. Each teammate must adjust this in their own account.
+              </p>
+            </div>
+          </div>
+        </details>
+
+
+        <!-- Leave a Review Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">⭐</span>
+            Leave a Review on Etsy
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            Opens the Etsy page where you can leave a review for Sheets Brewery. Reviews help us grow and improve the product for everyone.
+          </p>
+        </details>
+
+
+        <!-- Help & Support Accordion -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">🛠</span>
+            Help &amp; Support
+          </summary>
+          <div class="px-4 pb-4 text-gray-700">
+            <ul class="list-disc pl-5 space-y-1">
+              <li><b>Contact Sheets Brewery</b> — Direct link to support if you need assistance or run into issues.</li>
+            </ul>
+            <div class="mt-3 bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded">
+              <p><b>✨ Install the Latest Version</b> — Normally you won’t need this. Only use it if a new update is released. Just follow the popup instructions with simple copy‑and‑paste steps — no coding skills required.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Step 8: Setup & Permissions -->
+    <section id="setup" class="max-w-4xl mx-auto py-12 px-6 fade-in">
+      <h3 class="text-3xl font-bold text-indigo-700 mb-8">
+        ⚙️ Step 8: Setup & Permissions (Enable Automation)
+      </h3>
+      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+        Follow these simple steps to get your Team Task Tracker up and running
+        quickly. Each step ensures your system is configured correctly for
+        smooth task management and timely notifications.
+      </p>
+      <div class="space-y-6">
+        <div
+          class="flex items-center bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
+        >
+          <div class="text-indigo-600 text-3xl mr-5">⚡</div>
+          <div>
+            <h4 class="font-semibold text-lg mb-1">Access Task Central</h4>
+            <p class="text-gray-600">
+              Navigate to <b>✨ Task Central</b> in the top menu bar to start
+              configuring your tracker.
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-center bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
+        >
+          <div class="text-green-500 text-3xl mr-5">✅</div>
+          <div>
+            <h4 class="font-semibold text-lg mb-1">
+              Enable Email Notifications
+            </h4>
+            <p class="text-gray-600">
+              Click <b>✅ Enable Email Notifications</b> to activate reminders
+              and keep your team updated automatically.
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-center bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
+        >
+          <div class="text-yellow-400 text-3xl mr-5">🔒</div>
+          <div>
+            <h4 class="font-semibold text-lg mb-1">Grant Permissions</h4>
+            <p class="text-gray-700">
+              The first time you use the template, Google will ask you for permission. This is normal for custom scripts.
+              <br/><br/>
+              <ol class="list-decimal pl-6 space-y-1 text-gray-700">
+                <li>Click <b>OK</b> on the permissions prompt.</li>
+                <li>Select the Google account you want to use.</li>
+                <li>On the warning screen, scroll down and click <b>Advanced</b>.</li>
+                <li>Click the link <i>Go to Team Task Tracker (unsafe)</i> to proceed.</li>
+                <li>Review the permissions requested and click <b>Allow</b>.</li>
+              </ol>
+              <br/>
+              <span class="text-sm text-gray-500">✔ The script only touches your spreadsheet and Google Calendar—nothing else.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+
+
+    <!-- FAQ -->
+    <section id="faq" class="bg-gray-50 py-12 px-6 fade-in">
+      <div class="max-w-4xl mx-auto">
+        <h3 class="text-3xl font-bold text-indigo-700 mb-8">
+          ❓ Step 9: FAQ & Troubleshooting
+        </h3>
+        <details
+          class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden"
+        >
+          <summary
+            class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none"
+          >
+            <span class="text-xl">🔒</span>
+            Why does Google show "unverified app"?
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            It’s Google’s standard security warning for apps that haven’t
+            undergone full verification. This doesn’t mean it’s unsafe. Here’s
+            what to do:
+            <br /><br />
+            1. On the warning screen, scroll down and click <b>Advanced</b>.
+            <br />
+            2. You’ll see a link that says
+            <i>Go to Team Task Tracker (unsafe)</i> — click it to continue.
+            <br />
+            3. Review the list of permissions and click <b>Allow</b> to grant
+            access. <br /><br />
+            The script only interacts with your spreadsheet and Google Calendar.
+            No other data is touched.
+          </p>
+        </details>
+        <details
+          class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden"
+        >
+          <summary
+            class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none"
+          >
+            <span class="text-xl">📧</span>
+            I’m not getting reminder emails—what should I check?
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            Verify that notifications are enabled in Task Central, ensure email
+            addresses are correct in the Team Members sheet, and confirm your
+            timezone settings are accurate.
+          </p>
+        </details>
+        <!-- FAQ ADDITIONS -->
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">⏰</span>
+            My reminders are late — what’s the timing window?
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            If you pick hour “7,” the script runs sometime between <b>7:00–8:00 AM</b> each day. Adjust the hour in the <b>Timer</b> tab if needed.
+          </p>
+        </details>
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">🧹</span>
+            My filters aren’t cleared — how do I reset the view?
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            Click the little <b>✖</b> in the top‑right of your sheet to clear any active filter and show all rows again.
+          </p>
+        </details>
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">🛠</span>
+            Can I rename sheets or move columns?
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            Not by default — the scripts look for the tabs <b>Home 🏠</b>, <b>Team Members 👥</b>, and <b>Timer ⏰</b>, plus specific column spots. Renaming a sheet or shifting key columns will break the automation.
+          </p>
+        </details>
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">✅</span>
+            What happens when I complete a task?
+          </summary>
+          <p class="px-4 pb-4 text-gray-700">
+            The related Google Calendar event is removed automatically, keeping your schedule clean.
+          </p>
+        </details>
+        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
+          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+            <span class="text-xl">📆</span>
+            Why don’t I see calendar events?
+          </summary>
+          <div class="px-4 pb-4 text-gray-700 space-y-2">
+            <p><b>You’re an assignee (guest):</b> Assignees with Gmail are auto‑invited as guests. In <b>Google Calendar → Settings → Event Settings → Add invitations to my calendar</b>, choose <b>From everyone</b>. Then accept the invite in your email.</p>
+            <p><b>Calendar sharing & visibility:</b> Events live in the sheet owner’s calendar. Make sure that calendar is shared with you and enabled under <b>My calendars</b>.</p>
+            <p><b>Run the update:</b> New tasks only appear when you click <b>✨ Task Central → Update Google Calendar Events</b> or during the overnight sync.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="bg-gradient-to-r from-indigo-100 to-purple-100 shadow mt-12 fade-in"
+    >
+      <div class="max-w-7xl mx-auto px-6 py-8 text-center">
+        <p class="text-gray-600 mb-4">
+          Made with 🍺 by Sheets Brewery —
+          <a
+            href="https://www.etsy.com/shop/SheetsBrewery"
+            target="_blank"
+            class="text-indigo-600 hover:underline transition-colors duration-300"
+            >Visit Shop</a
+          >
+        </p>
+        <a
+          href="https://www.etsy.com/shop/SheetsBrewery#reviews"
+          target="_blank"
+          class="inline-block bg-indigo-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-indigo-700 transform transition-transform duration-300 hover:scale-105"
+          >⭐ Leave a Review</a
+        >
+      </div>
+    </footer>
+
+    <!-- Voice Instructions Button and Controls -->
+    <div id="voice-controls">
+      <div class="text-center my-8">
+        <button id="voice-instructions" class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition">
+          🔊 Hear Instructions
+        </button>
+      </div>
+      <div class="text-center my-4">
+        <label for="voice-speed" class="block text-gray-700 mb-2">Speech Speed</label>
+        <input id="voice-speed" type="range" min="0.5" max="1.5" step="0.1" value="1" class="w-64">
+      </div>
+      <div class="text-center my-4">
+        <label for="voice-select" class="block text-gray-700 mb-2">Choose Voice</label>
+        <select id="voice-select" class="w-64 border rounded p-2"></select>
+      </div>
+    </div>
+    </div> <!-- END #site-content -->
+</body>
+<script>
+  // Mobile nav toggle
+  document.addEventListener('DOMContentLoaded', function () {
+    var toggle = document.getElementById('menu-toggle');
+    var menu = document.getElementById('menu-mobile');
+    if (toggle && menu) {
+      toggle.addEventListener('click', function () {
+        menu.classList.toggle('hidden');
+      });
+      // Optional: Hide menu when a link is clicked (for SPA feel)
+      menu.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() {
+          menu.classList.add('hidden');
+        });
+      });
+    }
+    // Desktop nav active link highlight on scroll
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll("#desktop-nav a");
+    window.addEventListener("scroll", () => {
+      let current = "";
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 80;
+        if (pageYOffset >= sectionTop) {
+          current = section.getAttribute("id");
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove("bg-indigo-100","text-indigo-700","font-semibold");
+        if (link.getAttribute("href") === "#" + current) {
+          link.classList.add("bg-indigo-100","text-indigo-700","font-semibold");
+        }
+      });
+    });
+
+    // --- Voice selection and speech synthesis improvements (Google voices only, default to US English Female) ---
+    const voiceSelect = document.getElementById("voice-select");
+    function populateVoices() {
+      if (!voiceSelect) return;
+      let voices = speechSynthesis.getVoices().filter(v => /google/i.test(v.name));
+      // Build label with descriptive info
+      function makeLabel(v) {
+        let label = v.name;
+        let desc = [];
+        if (/us/i.test(v.lang)) desc.push("US");
+        else if (/gb|uk/i.test(v.lang)) desc.push("UK");
+        else if (/au/i.test(v.lang)) desc.push("AU");
+        if (/female/i.test(v.name)) desc.push("Female");
+        else if (/male/i.test(v.name)) desc.push("Male");
+        if (/google/i.test(v.name)) desc.push("Google");
+        if (/natural/i.test(v.name)) desc.push("Natural");
+        if (/neural/i.test(v.name)) desc.push("Neural");
+        if (/premium/i.test(v.name)) desc.push("Premium");
+        if (desc.length) label += " (" + desc.join(" ") + ")";
+        else label += " (" + v.lang + ")";
+        return label;
+      }
+      voiceSelect.innerHTML = voices.map(v => `<option value="${v.name}">${makeLabel(v)}</option>`).join("");
+      // Default to Google US English if available
+      let defaultVoiceName = "Google US English";
+      const usDefault = voices.find(v => v.name === defaultVoiceName);
+      const savedVoice = localStorage.getItem("voiceName");
+      if (savedVoice && [...voiceSelect.options].some(o => o.value === savedVoice)) {
+        voiceSelect.value = savedVoice;
+      } else if (usDefault) {
+        voiceSelect.value = usDefault.name;
+      } else if (voices[0]) {
+        voiceSelect.value = voices[0].name;
+      }
+    }
+    populateVoices();
+    speechSynthesis.onvoiceschanged = populateVoices;
+    if (voiceSelect) {
+      voiceSelect.addEventListener("change", () => {
+        localStorage.setItem("voiceName", voiceSelect.value);
+      });
+    }
+
+    // --- Voice Instructions global state & helpers ---
+    // Move these to DOMContentLoaded top scope so all handlers can access
+    const text = `Hi there, and welcome to your Team Task Tracker. I’m going to walk you through everything you see on this page so you can start using it without confusion.
+
+Step 1. Getting your copy.
+Click the button at the top that says “Get Your Copy.” That creates your personal version of the tracker in Google Sheets. Make sure you’re signed into the Google account you want to use.
+
+Step 2. The tabs along the bottom.
+• Home is where you’ll spend most of your time adding and updating tasks.
+• Team Members is where you type in your teammates’ names and emails. That’s what powers the dropdown in Home and makes notifications and calendar invites work.
+• Status Configuration lets you rename statuses so they fit your process. Whatever you change there updates everywhere automatically.
+• Kanban gives you a board view of tasks by status, with borders showing priority at a glance.
+• Timer is where you choose how early before the due date reminders should start, and what time of day those reminders arrive. They’ll keep coming until the task is finished.
+• And Task Central is your control hub — a custom menu built by Sheets Brewery that pulls all the advanced features into one place.
+
+Step 3. Adding your teammates.
+Go to Team Members and fill out two simple columns: full name in column A, and exact email in column B. The status column updates itself — showing “All Clear” if they have no open tasks, or “Pending” with the count if they do. You can also use the Quick View dropdown at the top‑right to see any teammate’s task list instantly.
+
+Step 4. Creating tasks in Home.
+For each task, pick the team member, write a name and description, set priority, start date, due date, and a status. If it’s something that repeats, just type a number of days in the Recurring column. When you mark it completed — or move it to your final status — the tracker will automatically duplicate it and schedule the next one ahead. At the top of Home, you’ll see counters and a progress bar, and you can hide or show them using the Stats dropdown. You can also use Quick Filter Views under the Data menu to instantly focus on things like overdue tasks, due today, or completed. To go back, just click the little X in the top‑right of the sheet.
+
+Step 5. Customizing statuses.
+Open Status Configuration and rename them however you like. Changes will reflect right away in Home, Kanban, stats, and filters.
+
+Step 6. Using the Kanban board.
+This board updates in real time based on your statuses. You’ll see colored borders for priority: red means high, orange is medium, and yellow is low.
+
+Step 7. Task Central.
+From the menu bar, you’ll find all the advanced features:
+• Email Notifications — the first time, run Enable Notifications. Google will ask for permissions, and after that, reminders will just work. You can also check status, pause them, or refresh the schedule if you change the reminder time in Timer.
+• Auto‑Assign Tasks spreads tasks evenly by assigning unassigned ones randomly.
+• Show or Hide Completed lets you keep the view clean.
+• Task Row Colors lets you set colors for overdue, due today, and due soon — and it remembers your choices.
+• The Focus Sprint Planner helps you run focused work sessions. It includes Pomodoro and other methods, and there’s a little help icon inside with full guidance.
+• Google Calendar Sync adds tasks with due dates to your calendar and removes them when done. After you give permission once, it syncs automatically every night at midnight. If your teammates don’t see events, they need to open their Google Calendar settings, go to Event Settings, and set “Add invitations to my calendar” to “From everyone.” On mobile, the same option is under Settings → General.
+• There’s also a quick link to leave a review on Etsy, and Help & Support where you can contact us or, if there’s a new update, run Install Latest Version. That one will pop up and guide you step by step — no coding needed.
+
+Step 8. Setup and permissions.
+When you first enable notifications, Google might show an “unverified app” warning. That’s expected for custom tools like this. Just click Advanced, then “Go to Team Task Tracker,” and Allow. The script only connects this sheet with your calendar — nothing else.
+
+Step 9. FAQ and troubleshooting.
+If you’re not getting emails, check Task Central to be sure notifications are enabled, teammate emails are correct, and your timezone is set right. If reminders seem late, remember that the script runs within an hour window. If filters are stuck, clear them with the little X at the top. Don’t rename sheets or move columns — the automation depends on them. Completing a task automatically removes its calendar event. And if you don’t see events, check invites, calendar sharing, and run the update manually or wait for the nightly sync.
+
+That’s it. You now know how to use every part of your Team Task Tracker. Have fun staying organized, and let the automation do the heavy lifting for you.`;
+
+    let totalTextLen = text.length;
+    let isPlaying = false;
+    let isPaused = false;
+    let lastBoundary = 0; // Used only for slider updates if needed
+    let seekRequested = false;
+    let lastUtter = null; // Reference to current utterance
+    let rate = parseFloat(localStorage.getItem("voiceRate")) || 1;
+
+    // --- Sentence-based narration system ---
+    // 1. Split narration text into sentences
+    const sentences = text.split(/(?<=[.?!])\s+/);
+    // 2. Track which sentence index is currently being spoken
+    let currentSentenceIndex = 0;
+
+    // Helper: get the character index of start of a sentence
+    function getSentenceStartCharIndex(sentenceIdx) {
+      if (sentenceIdx <= 0) return 0;
+      let idx = 0;
+      for (let i = 0; i < sentenceIdx; ++i) {
+        idx += sentences[i].length;
+        // Add 1 for the space after the sentence (if not last sentence)
+        if (i < sentences.length - 1) {
+          // Try to find the actual separator length in the original text
+          // (could be multiple spaces or \n)
+          // Look for the next sentence in text after idx
+          let rest = text.slice(idx);
+          let nextSentence = sentences[i + 1];
+          let nextIdx = rest.indexOf(nextSentence);
+          if (nextIdx > 0) {
+            idx += nextIdx;
+          } else {
+            idx += 1;
+          }
+        }
+      }
+      return idx;
+    }
+
+    // Helper: start speaking from a given sentence index
+    function speakFromSentence(sentenceIndex) {
+      speechSynthesis.cancel();
+      if (sentenceIndex >= sentences.length) {
+        isPlaying = false;
+        isPaused = false;
+        updateSlider(totalTextLen);
+        return;
+      }
+      isPlaying = true;
+      isPaused = false;
+      currentSentenceIndex = sentenceIndex;
+
+      // Compute char index in text for slider update
+      let charIndex = getSentenceStartCharIndex(sentenceIndex);
+      lastBoundary = charIndex; // for slider update only
+
+      const utter = new SpeechSynthesisUtterance(sentences[sentenceIndex]);
+      // Use Google US English by default, or user selection from dropdown
+      const allVoices = speechSynthesis.getVoices().filter(v => /google/i.test(v.name));
+      const savedVoiceName = localStorage.getItem("voiceName");
+      const defaultVoice = allVoices.find(v => v.name === "Google US English") || allVoices[0];
+      const chosenVoice = savedVoiceName ? allVoices.find(v => v.name === savedVoiceName) : defaultVoice;
+
+      if (chosenVoice) utter.voice = chosenVoice;
+      utter.rate = rate; // Always use up-to-date rate
+      utter.pitch = 1.05;
+      utter.volume = 1;
+
+      utter.onboundary = function(e) {
+        // Update slider as we speak the sentence
+        if (e.name === "word" || e.name === "sentence" || e.name === "text") {
+          let absIdx = charIndex + e.charIndex;
+          lastBoundary = absIdx;
+          updateSlider(absIdx);
+        }
+      };
+      utter.onend = function() {
+        // If still playing, move to next sentence
+        if (isPlaying && !isPaused && currentSentenceIndex + 1 < sentences.length) {
+          currentSentenceIndex++;
+          speakFromSentence(currentSentenceIndex);
+        } else {
+          isPlaying = false;
+          updateSlider(totalTextLen);
+        }
+      };
+
+      lastUtter = utter;
+      speechSynthesis.speak(utter);
+      updateSlider(charIndex);
+    }
+
+    // Update slider based on char index
+    function updateSlider(idx) {
+      const slider = document.getElementById("timeline-slider");
+      if (!slider) return;
+      let pct = Math.floor((idx / totalTextLen) * 100);
+      slider.value = pct;
+    }
+
+    // Voice Instructions button and timeline controls
+    const voiceButton = document.getElementById("voice-instructions");
+    if (voiceButton) {
+      voiceButton.addEventListener("click", () => {
+        // Hide button
+        voiceButton.style.display = "none";
+        // Insert timeline controls below
+        let timeline = document.getElementById("voice-timeline");
+        if (!timeline) {
+          const container = document.createElement("div");
+          container.innerHTML = `
+            <div id="voice-timeline" class="text-center my-4 hidden">
+              <input id="timeline-slider" type="range" min="0" max="100" value="0" class="w-3/4">
+              <div class="mt-2 space-x-4">
+                <button id="timeline-toggle"
+                  class="px-4 py-2 rounded transition transform hover:scale-110 text-2xl text-gray-700 bg-transparent hover:text-indigo-600"
+                  style="background: transparent;">
+                  ▶
+                </button>
+              </div>
+            </div>
+          `;
+          // Place below the Hear Instructions button's container
+          voiceButton.parentNode.insertAdjacentElement("afterend", container.firstElementChild);
+        }
+        timeline = document.getElementById("voice-timeline");
+        timeline.classList.remove("hidden");
+
+        // Timeline controls
+        const slider = document.getElementById("timeline-slider");
+        const toggleBtn = document.getElementById("timeline-toggle");
+
+        if (slider) {
+          slider.value = 0;
+        }
+
+        // Toggle Play/Pause/Resume logic
+        if (toggleBtn) {
+          // Initial state: show as stop/pause by default
+          toggleBtn.textContent = "⏸";
+          toggleBtn.classList.remove("bg-green-500","bg-yellow-500","text-white");
+          toggleBtn.classList.add("text-gray-700");
+          toggleBtn.onclick = function() {
+            if (isPlaying && !isPaused) {
+              // Currently playing → pause
+              speechSynthesis.pause();
+              isPaused = true;
+              toggleBtn.textContent = "▶";
+            } else if (isPlaying && isPaused) {
+              // Resume
+              speechSynthesis.resume();
+              isPaused = false;
+              toggleBtn.textContent = "⏸";
+            } else {
+              // Start from slider position
+              let pct = parseInt(slider.value, 10);
+              let charIdx = Math.floor((pct / 100) * totalTextLen);
+              let sentIdx = 0;
+              for (let i = 0; i < sentences.length; ++i) {
+                let sentStart = getSentenceStartCharIndex(i);
+                if (sentStart <= charIdx) {
+                  sentIdx = i;
+                } else break;
+              }
+              speakFromSentence(sentIdx);
+              toggleBtn.textContent = "⏸";
+            }
+          };
+        }
+        // Drag slider: seek and restart playback immediately when moved
+        if (slider) {
+          slider.oninput = function() {
+            let pct = parseInt(slider.value, 10);
+            let charIdx = Math.floor((pct / 100) * totalTextLen);
+            // Find nearest sentence index for charIdx
+            let sentIdx = 0;
+            for (let i = 0; i < sentences.length; ++i) {
+              let sentStart = getSentenceStartCharIndex(i);
+              if (sentStart <= charIdx) {
+                sentIdx = i;
+              } else {
+                break;
+              }
+            }
+            speakFromSentence(sentIdx);
+            if (toggleBtn) {
+              toggleBtn.textContent = "⏸";
+            }
+          };
+        }
+        // Start from beginning
+        speakFromSentence(0);
+      });
+    }
+
+    // Banner "Hear Instructions" triggers the same behavior as the main button
+    const bannerBtn = document.getElementById("voice-banner");
+    if (bannerBtn && voiceButton) {
+      bannerBtn.addEventListener("click", () => {
+        // Reproducir narración inmediatamente
+        voiceButton.click();
+
+        // Hacer scroll suave hasta la sección completa de controles de voz
+        const controlsSection = document.getElementById("voice-controls") || voiceButton;
+        controlsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    // Speech speed slider logic
+    const speedSlider = document.getElementById("voice-speed");
+    if (speedSlider) {
+      // Set initial value from localStorage if exists
+      const saved = localStorage.getItem("voiceRate");
+      if (saved) speedSlider.value = saved;
+      speedSlider.addEventListener("input", () => {
+        localStorage.setItem("voiceRate", speedSlider.value);
+        rate = parseFloat(speedSlider.value);
+        if (isPlaying) {
+          speechSynthesis.cancel();
+          // Resume from currentSentenceIndex with new rate
+          speakFromSentence(currentSentenceIndex);
+        }
+      });
+    }
+
+  });
+</script>
+<script>
+  // --- Password Overlay Logic ---
+  const PASSWORD = "sheetsbrewery"; // Change as needed
+  const overlay = document.getElementById("password-overlay");
+  const lockIcon = document.getElementById("lock-icon");
+  const passInput = document.getElementById("password-input");
+  const passButton = document.getElementById("password-button");
+  const errorMsg = document.getElementById("password-error");
+  const siteContent = document.getElementById("site-content");
+
+  // If already unlocked in localStorage, hide overlay and show site content
+  if (localStorage.getItem("siteUnlocked") === "true") {
+    if (overlay) overlay.style.display = "none";
+    if (siteContent) siteContent.classList.remove("hidden");
+  }
+
+  function unlock() {
+    if (passInput.value === PASSWORD) {
+      // Animate lock opening with CSS keyframes
+      lockIcon.textContent = "🔓";
+      lockIcon.classList.add("text-green-500");
+      lockIcon.style.animation = "lockBounce 0.6s ease, lockShake 0.8s ease";
+      setTimeout(() => {
+        overlay.style.display = "none";
+        if (siteContent) siteContent.classList.remove("hidden");
+        localStorage.setItem("siteUnlocked", "true");
+        // Reset animation after it's done
+        lockIcon.style.animation = "";
+      }, 800);
+    } else {
+      // Animate shake in red for incorrect password
+      lockIcon.classList.add("text-red-500");
+      lockIcon.style.animation = "lockShake 0.6s ease";
+      setTimeout(() => {
+        lockIcon.classList.remove("text-red-500");
+        lockIcon.style.animation = "";
+      }, 600);
+      errorMsg.classList.remove("hidden");
+    }
+  }
+
+  passButton.addEventListener("click", unlock);
+  passInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") unlock();
+  });
+
+  // Password eye toggle logic
+  const togglePassword = document.getElementById("toggle-password");
+  if (togglePassword) {
+    togglePassword.addEventListener("click", () => {
+      if (passInput.type === "password") {
+        passInput.type = "text";
+        togglePassword.setAttribute("aria-label", "Hide password");
+        togglePassword.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.965 9.965 0 012.343-3.993M9.88 9.88a3 3 0 104.24 4.24M6.1 6.1l11.8 11.8" />
+          </svg>`;
+      } else {
+        passInput.type = "password";
+        togglePassword.setAttribute("aria-label", "Show password");
+        togglePassword.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>`;
+      }
+    });
+  }
+</script>
