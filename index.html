@@ -4,8 +4,60 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Team Task Tracker – Setup Guide & FAQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+              display: ["Space Grotesk", "Inter", "sans-serif"],
+            },
+            colors: {
+              brand: {
+                50: "#eef2ff",
+                100: "#e0e7ff",
+                200: "#c7d2fe",
+                300: "#a5b4fc",
+                400: "#818cf8",
+                500: "#6366f1",
+                600: "#4f46e5",
+                700: "#4338ca",
+                800: "#3730a3",
+                900: "#312e81",
+              },
+              accent: {
+                50: "#fdf2f8",
+                100: "#fce7f3",
+                200: "#fbcfe8",
+                300: "#f9a8d4",
+                400: "#f472b6",
+                500: "#ec4899",
+                600: "#db2777",
+                700: "#be185d",
+                800: "#9d174d",
+                900: "#831843",
+              },
+              slateInk: "#0f172a",
+            },
+            boxShadow: {
+              elevated: "0 28px 68px -32px rgba(30, 64, 175, 0.35)",
+              soft: "0 20px 45px -30px rgba(15, 23, 42, 0.3)",
+            },
+            borderRadius: {
+              card: "1.75rem",
+            },
+          },
+        },
+      };
+    </script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
@@ -14,6 +66,759 @@
       .fade-in {
         animation: fadeIn 1s ease-in both;
       }
+      :root {
+        color-scheme: light;
+        --brand-primary: #4f46e5;
+        --brand-secondary: #6366f1;
+        --brand-accent: #a855f7;
+        --surface: rgba(255, 255, 255, 0.88);
+        --surface-strong: rgba(255, 255, 255, 0.95);
+        --surface-border: rgba(99, 102, 241, 0.15);
+        --shadow-strong: 0 35px 80px -40px rgba(79, 70, 229, 0.45);
+        --shadow-soft: 0 28px 65px -48px rgba(15, 23, 42, 0.4);
+        --radius: clamp(1.75rem, 1.4rem + 1vw, 3rem);
+        --layout-gutter: clamp(0.6rem, 3vw, 3rem);
+        --max-width: min(72rem, 100%);
+        --space-xs: clamp(0.5rem, 0.45rem + 0.35vw, 0.75rem);
+        --space-sm: clamp(0.75rem, 0.65rem + 0.5vw, 1.1rem);
+        --space-md: clamp(1rem, 0.85rem + 0.75vw, 1.75rem);
+        --space-lg: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);
+        --space-xl: clamp(2.5rem, 2rem + 1.5vw, 4rem);
+        --space-2xl: clamp(3.25rem, 2.6rem + 2vw, 5.25rem);
+        --hero-top-spacing: clamp(6rem, 10vw, 8rem);
+        --hero-side-spacing: clamp(1.25rem, 5vw, 3rem);
+      }
+      html {
+        font-size: clamp(0.9rem, calc(0.85rem + 0.45vw), 1.1rem);
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: radial-gradient(circle at top left, #f5f3ff 0%, #eef2ff 35%, #ffffff 72%);
+        color: #0f172a;
+        min-height: 100vh;
+        text-rendering: optimizeLegibility;
+      }
+      @media (max-width: 640px) {
+        body {
+          background: linear-gradient(160deg, #f5f3ff 0%, #ffffff 70%);
+        }
+        main.site-main {
+          gap: clamp(1.65rem, 5vw, 2.35rem);
+        }
+      }
+      @media (max-width: 480px) {
+        :root {
+          --layout-gutter: clamp(0.5rem, 4vw, 0.75rem);
+          --radius: clamp(0.9rem, 0.8rem + 1.5vw, 1.5rem);
+          --hero-side-spacing: clamp(1rem, 8vw, 1.75rem);
+          --hero-top-spacing: clamp(6rem, 14vw, 7.5rem);
+        }
+        nav.glass-nav .nav-inner,
+        .hero,
+        .announcement-banner,
+        .section-block {
+          border-radius: var(--radius);
+        }
+        .hero {
+          padding: clamp(1.35rem, 8vw, 3rem) clamp(0.75rem, 6vw, 2.25rem);
+        }
+        .section-block {
+          padding: clamp(0.75rem, 4vw, 1.6rem);
+        }
+      }
+      nav.glass-nav {
+        position: fixed;
+        top: clamp(1rem, 0.6rem + 1vw, 1.75rem);
+        left: 0;
+        right: 0;
+        z-index: 60;
+        padding-inline: var(--layout-gutter);
+        display: flex;
+        justify-content: center;
+      }
+      nav.glass-nav .nav-container {
+        position: relative;
+        width: min(var(--max-width), 100%);
+        margin: 0 auto;
+      }
+      nav.glass-nav .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-sm);
+        flex-wrap: nowrap;
+        width: 100%;
+        border-radius: 999px;
+        padding: clamp(0.65rem, 0.55rem + 0.4vw, 0.95rem) clamp(1.25rem, 1rem + 1.5vw, 2rem);
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        box-shadow: var(--shadow-strong);
+      }
+      nav.glass-nav .nav-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        font-family: "Space Grotesk", "Inter", sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: rgba(30, 41, 59, 0.9);
+        text-transform: uppercase;
+        font-size: clamp(0.7rem, 0.65rem + 0.2vw, 0.82rem);
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-right: clamp(0.85rem, 1vw, 1.5rem);
+      }
+      nav.glass-nav .nav-brand span {
+        display: inline-block;
+        white-space: nowrap;
+        letter-spacing: clamp(0.24em, 0.16em + 0.35vw, 0.4em);
+      }
+      nav.glass-nav .nav-brand img {
+        height: clamp(2.5rem, 2.1rem + 0.5vw, 3rem);
+        width: clamp(2.5rem, 2.1rem + 0.5vw, 3rem);
+        border-radius: clamp(0.75rem, 0.6rem + 0.25vw, 1rem);
+        box-shadow: 0 0.75rem 1.7rem -1rem rgba(79, 70, 229, 0.5);
+      }
+      nav.glass-nav #desktop-nav {
+        display: none;
+        align-items: center;
+        column-gap: clamp(0.35rem, 0.3rem + 0.6vw, 0.75rem);
+        margin-left: auto;
+        flex-wrap: nowrap;
+      }
+      nav.glass-nav .nav-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: clamp(2.6rem, 2.2rem + 0.8vw, 3rem);
+        width: clamp(2.6rem, 2.2rem + 0.8vw, 3rem);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #4338ca;
+        border: 1px solid rgba(99, 102, 241, 0.16);
+        box-shadow: var(--shadow-soft);
+        transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+      }
+      nav.glass-nav .nav-toggle:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: translateY(-1px);
+      }
+      nav.glass-nav .nav-toggle:focus-visible {
+        outline: 2px solid rgba(99, 102, 241, 0.4);
+        outline-offset: 3px;
+      }
+      nav.glass-nav .nav-toggle[aria-expanded="true"] {
+        background: rgba(99, 102, 241, 0.12);
+        color: #4f46e5;
+        box-shadow: 0 20px 45px -30px rgba(79, 70, 229, 0.45);
+      }
+      nav.glass-nav .nav-toggle svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        display: block;
+      }
+      nav.glass-nav .nav-toggle .icon-close {
+        display: none;
+      }
+      nav.glass-nav .nav-toggle[aria-expanded="true"] .icon-menu {
+        display: none;
+      }
+      nav.glass-nav .nav-toggle[aria-expanded="true"] .icon-close {
+        display: block;
+      }
+      .nav-link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.55rem 0.95rem;
+        border-radius: 999px;
+        font-size: 0.92rem;
+        font-weight: 500;
+        color: #334155;
+        transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        white-space: nowrap;
+        flex: 0 0 auto;
+      }
+      .nav-link:hover {
+        color: #1e1b4b;
+        background: rgba(99, 102, 241, 0.12);
+      }
+      .nav-link.is-active {
+        color: #1e1b4b;
+        background: rgba(99, 102, 241, 0.22);
+        box-shadow: 0 20px 45px -30px rgba(79, 70, 229, 0.45);
+      }
+      nav.glass-nav .mobile-nav-panel {
+        position: absolute;
+        top: calc(100% + clamp(0.75rem, 2vw, 1.2rem));
+        left: 50%;
+        transform: translateX(-50%) translateY(-0.5rem);
+        width: min(var(--max-width), calc(100% - (var(--layout-gutter) + var(--layout-gutter))));
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        box-shadow: var(--shadow-soft);
+        border-radius: clamp(1.5rem, 1.2rem + 0.5vw, 2.25rem);
+        padding: clamp(1rem, 0.85rem + 0.6vw, 1.5rem);
+        display: flex;
+        flex-direction: column;
+        gap: clamp(0.5rem, 1.5vw, 0.85rem);
+        max-height: min(70vh, 28rem);
+        overflow-y: auto;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+        -webkit-overflow-scrolling: touch;
+      }
+      nav.glass-nav .mobile-nav-panel.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0);
+      }
+      nav.glass-nav .mobile-nav-link {
+        display: block;
+        padding: clamp(0.65rem, 0.55rem + 0.4vw, 0.85rem) clamp(0.85rem, 0.75rem + 0.5vw, 1.25rem);
+        border-radius: clamp(0.75rem, 0.65rem + 0.35vw, 1.1rem);
+        font-weight: 500;
+        color: #334155;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      nav.glass-nav .mobile-nav-link:hover {
+        background: rgba(99, 102, 241, 0.12);
+        color: #1e1b4b;
+      }
+      @media (min-width: 1200px) {
+        nav.glass-nav #desktop-nav {
+          display: flex;
+        }
+        nav.glass-nav .nav-toggle {
+          display: none;
+        }
+        nav.glass-nav .mobile-nav-panel {
+          display: none;
+        }
+      }
+      @media (max-width: 1280px) {
+        nav.glass-nav .nav-inner {
+          padding-inline: clamp(0.9rem, 2.8vw, 1.35rem);
+          gap: clamp(0.55rem, 1.2vw, 0.95rem);
+        }
+        nav.glass-nav .nav-brand {
+          font-size: clamp(0.66rem, 0.6rem + 0.2vw, 0.78rem);
+        }
+        nav.glass-nav .nav-brand span {
+          letter-spacing: clamp(0.24em, 0.16em + 0.35vw, 0.4em);
+        }
+        nav.glass-nav .nav-brand img {
+          height: clamp(2.2rem, 1.7rem + 0.7vw, 2.7rem);
+          width: clamp(2.2rem, 1.7rem + 0.7vw, 2.7rem);
+        }
+        .nav-link {
+          padding: clamp(0.45rem, 0.4rem + 0.5vw, 0.8rem) clamp(0.55rem, 0.45rem + 0.9vw, 0.9rem);
+          font-size: clamp(0.82rem, 0.76rem + 0.25vw, 0.9rem);
+        }
+      }
+      @media (max-width: 1100px) {
+        nav.glass-nav .nav-inner {
+          padding-inline: clamp(0.75rem, 2.5vw, 1.15rem);
+          gap: clamp(0.45rem, 1vw, 0.8rem);
+        }
+        nav.glass-nav .nav-brand {
+          font-size: clamp(0.62rem, 0.56rem + 0.2vw, 0.74rem);
+        }
+        nav.glass-nav .nav-brand span {
+          letter-spacing: clamp(0.2em, 0.14em + 0.3vw, 0.35em);
+        }
+        nav.glass-nav .nav-brand img {
+          height: clamp(2rem, 1.6rem + 0.6vw, 2.4rem);
+          width: clamp(2rem, 1.6rem + 0.6vw, 2.4rem);
+        }
+        .nav-link {
+          padding: clamp(0.4rem, 0.35rem + 0.45vw, 0.7rem) clamp(0.5rem, 0.4rem + 0.8vw, 0.82rem);
+          font-size: clamp(0.78rem, 0.72rem + 0.25vw, 0.86rem);
+        }
+        nav.glass-nav #desktop-nav {
+          column-gap: clamp(0.3rem, 0.22rem + 0.5vw, 0.6rem);
+        }
+      }
+      @media (max-width: 640px) {
+        nav.glass-nav .nav-inner {
+          padding-inline: clamp(0.85rem, 5vw, 1.1rem);
+        }
+        nav.glass-nav .mobile-nav-panel {
+          width: calc(100% - (var(--layout-gutter) + var(--layout-gutter)));
+        }
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        margin: var(--hero-top-spacing) auto clamp(1.5rem, 3vw, 3rem);
+        max-width: var(--max-width);
+        width: min(var(--max-width), calc(100% - (var(--hero-side-spacing) * 2)));
+        border-radius: clamp(1.75rem, 1.5rem + 1vw, 3rem);
+        padding: clamp(1.75rem, 6vw, 4.5rem) clamp(1rem, 5vw, 3.5rem);
+        background: linear-gradient(135deg, #4338ca 0%, #4f46e5 42%, #8b5cf6 100%);
+        box-shadow: var(--shadow-strong);
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.22), transparent 55%),
+          radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.32), transparent 52%),
+          radial-gradient(circle at 50% 80%, rgba(99, 102, 241, 0.25), transparent 65%);
+        opacity: 0.85;
+      }
+      .hero > * {
+        position: relative;
+        z-index: 1;
+      }
+      .hero h2 {
+        font-family: "Space Grotesk", "Inter", sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .hero p {
+        color: rgba(255, 255, 255, 0.88);
+      }
+      .hero .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.95rem 2.85rem;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #312e81;
+        font-weight: 600;
+        font-size: 1.05rem;
+        box-shadow: 0 25px 55px -30px rgba(15, 23, 42, 0.65);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .hero .hero-cta:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 30px 65px -28px rgba(99, 102, 241, 0.55);
+      }
+      .announcement-banner {
+        position: relative;
+        overflow: hidden;
+        max-width: var(--max-width);
+        margin: 0 auto clamp(1.25rem, 3.8vw, 3rem);
+        width: min(var(--max-width), calc(100% - (var(--hero-side-spacing) * 2)));
+        padding: clamp(1.65rem, 3vw, 2.75rem) clamp(1.5rem, 5vw, 3rem);
+        border-radius: clamp(1.4rem, 1.2rem + 1.2vw, 2.4rem);
+        background:
+          radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.45), transparent 60%),
+          radial-gradient(circle at 85% 15%, rgba(147, 197, 253, 0.45), transparent 55%),
+          linear-gradient(120deg, rgba(63, 63, 191, 0.88), rgba(99, 102, 241, 0.82), rgba(168, 85, 247, 0.9));
+        border: 1px solid rgba(99, 102, 241, 0.22);
+        box-shadow: var(--shadow-strong);
+        backdrop-filter: blur(12px);
+      }
+      .announcement-banner::after {
+        content: "";
+        position: absolute;
+        inset: 1.15rem;
+        border-radius: inherit;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        opacity: 0.55;
+        pointer-events: none;
+      }
+      .announcement-banner .announcement-content {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: clamp(1.4rem, 2.5vw, 3.2rem);
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .announcement-copy {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(0.65rem, 1vw, 1.1rem);
+        max-width: 34ch;
+      }
+      .announcement-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        width: fit-content;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-weight: 600;
+        background: rgba(15, 23, 42, 0.18);
+        color: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        box-shadow: 0 12px 28px -22px rgba(15, 23, 42, 0.8);
+      }
+      .announcement-heading {
+        font-family: "Space Grotesk", "Inter", sans-serif;
+        font-size: clamp(1.4rem, 2vw, 1.85rem);
+        font-weight: 600;
+        letter-spacing: -0.015em;
+      }
+      .announcement-copy p {
+        margin: 0;
+        color: rgba(241, 245, 249, 0.9);
+        line-height: 1.5;
+      }
+      .announcement-footnote {
+        font-size: 0.9rem;
+        color: rgba(226, 232, 240, 0.75);
+      }
+      .announcement-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(0.75rem, 1.5vw, 1.35rem);
+        min-width: clamp(10rem, 28vw, 13.5rem);
+      }
+      .audio-visualizer {
+        display: grid;
+        grid-auto-flow: column;
+        gap: 0.25rem;
+        padding: 0.65rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 18px 40px -26px rgba(15, 23, 42, 0.65);
+      }
+      .audio-visualizer span {
+        display: inline-block;
+        width: 0.35rem;
+        height: 1.35rem;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(226, 232, 240, 0.5));
+        transform-origin: center bottom;
+        animation: equalize 1.6s ease-in-out infinite;
+      }
+      .audio-visualizer span:nth-child(2) { animation-delay: 0.1s; }
+      .audio-visualizer span:nth-child(3) { animation-delay: 0.2s; }
+      .audio-visualizer span:nth-child(4) { animation-delay: 0.35s; }
+      .audio-visualizer span:nth-child(5) { animation-delay: 0.5s; }
+      .audio-visualizer span:nth-child(6) { animation-delay: 0.65s; }
+      @keyframes equalize {
+        0%, 100% { transform: scaleY(0.45); opacity: 0.8; }
+        40% { transform: scaleY(1); opacity: 1; }
+        55% { transform: scaleY(0.6); opacity: 0.85; }
+        75% { transform: scaleY(0.9); opacity: 1; }
+      }
+      .announcement-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        padding: 0.85rem 2.4rem;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.22);
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 22px 48px -26px rgba(15, 23, 42, 0.75);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        backdrop-filter: blur(8px);
+      }
+      .announcement-button:hover {
+        transform: translateY(-2px);
+        background: rgba(15, 23, 42, 0.32);
+        box-shadow: 0 28px 58px -24px rgba(15, 23, 42, 0.8);
+      }
+      .announcement-button:focus-visible {
+        outline: 2px solid rgba(248, 250, 252, 0.8);
+        outline-offset: 4px;
+      }
+      .action-caption {
+        font-size: 0.85rem;
+        color: rgba(226, 232, 240, 0.75);
+      }
+      @media (max-width: 880px) {
+        .announcement-banner .announcement-content {
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
+        }
+        .announcement-action {
+          width: 100%;
+          align-items: stretch;
+        }
+        .announcement-button {
+          width: 100%;
+        }
+        .announcement-action .audio-visualizer {
+          align-self: center;
+        }
+      }
+      @media (max-width: 640px) {
+        .announcement-banner {
+          padding: clamp(1.4rem, 5vw, 2.2rem) clamp(1rem, 6vw, 1.75rem);
+        }
+        .announcement-banner .announcement-content {
+          text-align: center;
+          align-items: center;
+        }
+        .announcement-action {
+          align-items: center;
+        }
+        .announcement-button {
+          width: auto;
+        }
+      }
+      main.site-main {
+        max-width: var(--max-width);
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 var(--layout-gutter) clamp(3rem, 6vw, 5rem);
+        display: flex;
+        flex-direction: column;
+        gap: clamp(2rem, 4vw, 4.5rem);
+        margin-top: clamp(1.75rem, 4.5vw, 3rem);
+      }
+      @media (max-width: 768px) {
+        nav.glass-nav {
+          top: clamp(0.75rem, 1.2vw, 1rem);
+          padding-inline: var(--layout-gutter);
+        }
+        nav.glass-nav .nav-inner {
+          padding-inline: clamp(0.65rem, 3.5vw, 1rem);
+        }
+        main.site-main {
+          padding-inline: var(--layout-gutter);
+          padding-bottom: clamp(2.25rem, 7vw, 4rem);
+        }
+        .hero {
+          margin-top: var(--hero-top-spacing);
+          border-radius: clamp(1.5rem, 1.4rem + 0.5vw, 2.25rem);
+          padding: clamp(1.5rem, 7vw, 3.5rem) clamp(0.85rem, 5.5vw, 3rem);
+        }
+      }
+      .section-block {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: clamp(0.9rem, 3vw, 2.4rem);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid var(--surface-border);
+        backdrop-filter: blur(14px);
+        width: 100%;
+        max-width: min(var(--max-width), 100%);
+        scroll-margin-top: clamp(5.5rem, 5rem + 1vw, 7.5rem);
+        margin: 0 auto;
+      }
+      #taskcentral.section-block {
+        max-width: var(--max-width);
+        padding: clamp(1.25rem, 3.5vw, 3.25rem);
+      }
+      .section-block h3 {
+        font-family: "Space Grotesk", "Inter", sans-serif;
+        font-size: clamp(1.85rem, 3vw, 2.4rem);
+        font-weight: 600;
+        color: #312e81;
+        letter-spacing: -0.015em;
+        margin-bottom: 1.35rem;
+      }
+      .section-block p {
+        color: #334155;
+        line-height: 1.75;
+      }
+      .section-block strong,
+      .section-block b {
+        color: #1e1b4b;
+      }
+      .section-block .section-eyebrow {
+        font-size: 0.84rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(49, 46, 129, 0.6);
+        font-weight: 600;
+      }
+      .section-block .callout {
+        border-radius: 1.25rem;
+        padding: 1.25rem;
+      }
+      .voice-utility {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        max-width: min(45rem, 100%);
+        text-align: center;
+      }
+      .voice-utility .control-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        color: #475569;
+      }
+      .voice-utility .control-group input,
+      .voice-utility .control-group select {
+        width: 100%;
+        max-width: min(21.25rem, 100%);
+      }
+      .accordion-card {
+        border-radius: 1.35rem;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: var(--surface-strong);
+        box-shadow: 0 20px 55px -40px rgba(15, 23, 42, 0.35);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+      .accordion-card summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 1.1rem 1.6rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-weight: 600;
+        color: #312e81;
+      }
+      .accordion-card summary::-webkit-details-marker {
+        display: none;
+      }
+      .accordion-card[open] {
+        transform: translateY(-2px);
+        border-color: rgba(99, 102, 241, 0.35);
+        box-shadow: 0 28px 70px -45px rgba(30, 64, 175, 0.55);
+      }
+      .accordion-card[open] summary {
+        color: #1e1b4b;
+      }
+      .accordion-card .accordion-content {
+        padding: 0 1.6rem 1.4rem;
+        color: #334155;
+      }
+      .accordion-card ul,
+      .accordion-card ol {
+        padding-left: 1.25rem;
+      }
+      .accordion-card li {
+        padding: 0.25rem 0;
+      }
+      .gradient-card {
+        border-radius: 1.35rem;
+        padding: 1.4rem;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.09), rgba(168, 85, 247, 0.08));
+        box-shadow: 0 18px 55px -40px rgba(79, 70, 229, 0.5);
+      }
+      .gradient-card h5 {
+        font-weight: 600;
+        color: #312e81;
+      }
+      .pill-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 999px;
+        padding: 0.65rem 1.75rem;
+        font-weight: 600;
+        background: #312e81;
+        color: #ffffff;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      }
+      .pill-button:hover {
+        transform: translateY(-2px);
+        background: #4338ca;
+        box-shadow: 0 25px 60px -35px rgba(67, 56, 202, 0.55);
+      }
+      @media (max-width: 1240px) {
+        .gs-menubar .gs-menu-item:nth-child(8) {
+          position: relative;
+          color: transparent;
+        }
+        .gs-menubar .gs-menu-item:nth-child(8)::before {
+          content: "⋯";
+          color: #3c4043;
+          letter-spacing: 0.2em;
+          font-weight: 600;
+        }
+        .gs-menubar .gs-menu-item:nth-child(n + 9) {
+          display: none;
+        }
+      }
+      @media (max-width: 1080px) {
+        .gs-menubar {
+          justify-content: flex-start;
+        }
+        .gs-menubar .gs-menu-item:nth-child(7) {
+          position: relative;
+          color: transparent;
+        }
+        .gs-menubar .gs-menu-item:nth-child(7)::before {
+          content: "⋯";
+          color: #3c4043;
+          letter-spacing: 0.2em;
+          font-weight: 600;
+        }
+        .gs-menubar .gs-menu-item:nth-child(n + 8) {
+          display: none;
+        }
+      }
+      @media (max-width: 900px) {
+        .gs-menubar {
+          justify-content: flex-start;
+        }
+        .gs-menubar .gs-menu-item:nth-child(5) {
+          position: relative;
+          color: transparent;
+        }
+        .gs-menubar .gs-menu-item:nth-child(5)::before {
+          content: "⋯";
+          color: #3c4043;
+          letter-spacing: 0.2em;
+          font-weight: 600;
+        }
+        .gs-menubar .gs-menu-item:nth-child(n + 6) {
+          display: none;
+        }
+      }
+      @media (max-width: 640px) {
+        .nav-link {
+          padding: 0.5rem 0.75rem;
+        }
+        .accordion-card summary {
+          padding: 1rem 1.2rem;
+        }
+        .accordion-card .accordion-content {
+          padding: 0 1.25rem 1.25rem;
+        }
+        .gs-menubar {
+          justify-content: center;
+          gap: 0.5rem;
+          flex-wrap: nowrap;
+        }
+        .gs-menubar .gs-menu-item {
+          padding: 0;
+          flex: 0 0 auto;
+        }
+        .gs-menubar .gs-menu-item:nth-child(n + 4) {
+          display: none;
+        }
+        .gs-menubar .gs-menu-item:nth-child(3) {
+          position: relative;
+          color: transparent;
+        }
+        .gs-menubar .gs-menu-item:nth-child(3)::before {
+          content: "⋯";
+          color: #3c4043;
+          letter-spacing: 0.2em;
+          font-weight: 600;
+          font-size: 1.1em;
+        }
+        #taskCentralTrigger {
+          margin-left: 0.4rem;
+          gap: 0.25rem;
+          padding: 0.1rem 0.45rem 0.1rem 0.35rem;
+          font-size: 0.92rem;
+        }
+      }
       .no-scrollbar {
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
@@ -21,14 +826,20 @@
       .no-scrollbar::-webkit-scrollbar {
         display: none;
       }
+      .site-unlocked #password-overlay {
+        display: none !important;
+      }
+      .site-unlocked #site-content {
+        display: block !important;
+      }
       #menu-indicator {
         position: absolute;
-        top: -6px;
+        top: -0.375rem;
         width: 0;
         height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-top: 8px solid #6366f1;
+        border-left: 0.5rem solid transparent;
+        border-right: 0.5rem solid transparent;
+        border-top: 0.5rem solid #6366f1;
         transition: all 0.3s ease;
         transform: translateX(0);
       }
@@ -44,6 +855,303 @@
         50% { transform: scale(1.3); }
         100% { transform: scale(1); }
       }
+      .gs-stage-wrapper {
+        width: 100%;
+        max-width: min(52rem, 100%);
+        margin: 0 auto clamp(1rem, 0.85rem + 0.6vw, 1.5rem);
+        position: relative;
+        overflow: visible;
+      }
+      .gs-menu-stage {
+        background: #ffffff;
+        border: 1px solid rgba(221,224,230,0.85);
+        border-radius: clamp(0.9rem, 0.8rem + 0.3vw, 1.2rem);
+        padding: clamp(1.1rem, 0.95rem + 0.4vw, 1.25rem) clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem) clamp(0.75rem, 0.6rem + 0.3vw, 0.95rem);
+        margin: 0 auto;
+        box-shadow: 0 1rem 2rem -1.75rem rgba(15,23,42,0.3);
+        font-family: "Google Sans", "Roboto", "Helvetica Neue", sans-serif;
+        color: #202124;
+        width: min(100%, clamp(22rem, 45vw + 12rem, 56rem));
+        max-width: 100%;
+      }
+      .gs-sheetbar {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(226,232,240,0.75);
+      }
+      .gs-doc-icon {
+        width: clamp(1.6rem, 1.1rem + 2.5vw, 2.125rem);
+        height: clamp(1.6rem, 1.1rem + 2.5vw, 2.125rem);
+        border-radius: clamp(0.3rem, 0.25rem + 0.4vw, 0.375rem);
+        background: url("googlesheetsicon.png") center/cover no-repeat;
+        box-shadow: 0 0.75rem 1.5rem -1rem rgba(13, 148, 136, 0.4);
+      }
+      .gs-title-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        min-width: 0;
+      }
+      .gs-title-line {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: #202124;
+      }
+      .gs-title-name {
+        font-weight: 600;
+      }
+      .gs-icon-set {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .gs-icon-svg {
+        width: 1.125rem;
+        height: 1.125rem;
+        color: #5f6368;
+      }
+      .gs-icon-svg path,
+      .gs-icon-svg polyline,
+      .gs-icon-svg line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .gs-status-line {
+        font-size: 0.8rem;
+        color: #5f6368;
+      }
+      .gs-menubar {
+        display: flex;
+        align-items: center;
+        gap: clamp(0.65rem, 0.45rem + 1vw, 1.1rem);
+        flex-wrap: nowrap;
+        padding: clamp(0.55rem, 0.45rem + 0.2vw, 0.7rem) clamp(0.35rem, 0.25rem + 0.6vw, 1rem) 0;
+        font-size: 0.94rem;
+        color: #3c4043;
+        overflow: hidden;
+        box-sizing: border-box;
+        width: 100%;
+        justify-content: flex-start;
+        min-width: 0;
+      }
+      .gs-menu-item {
+        pointer-events: none;
+        cursor: default;
+        margin-right: 0;
+        white-space: nowrap;
+      }
+      .gs-menu-task {
+        border: none;
+        background: transparent;
+        font-size: 0.94rem;
+        font-weight: 500;
+        color: #3c4043;
+        margin-left: clamp(-0.45rem, -0.7vw, -0.35rem);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        cursor: pointer;
+        padding: 0.125rem 0.5rem 0.125rem 0.35rem;
+        border-radius: 0.25rem;
+        transition: background 0.2s ease, color 0.2s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      @media (max-width: 960px) {
+        .gs-menubar {
+          gap: clamp(0.45rem, 0.3rem + 0.8vw, 0.8rem);
+          font-size: clamp(0.88rem, 0.86rem + 0.2vw, 0.94rem);
+        }
+        .gs-menu-task {
+          padding: 0.1rem 0.42rem 0.1rem 0.3rem;
+          gap: 0.3rem;
+        }
+      }
+      .gs-menu-task:hover {
+        background: rgba(26,115,232,0.08);
+        color: #1a73e8;
+      }
+      .gs-menu-task:focus-visible {
+        outline: none;
+        background: rgba(26,115,232,0.08);
+        color: #1a73e8;
+      }
+      .gs-menu-task.active {
+        background: #e8eaed;
+        color: #202124;
+      }
+      .gs-menu-task.active::after {
+        display: none;
+      }
+      .gs-menu-tip {
+        margin: 0.75rem 0 1.375rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: #4338ca;
+        font-weight: 500;
+        flex-wrap: wrap;
+        text-align: center;
+      }
+      .gs-sim-body {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .gs-dropdown-shell {
+        min-width: 16.25rem;
+        max-width: 20rem;
+        background: #ffffff;
+        border: 1px solid rgba(216,222,233,0.9);
+        border-radius: clamp(0.7rem, 0.6rem + 0.2vw, 0.85rem);
+        box-shadow: 0 1.25rem 2.5rem -2.2rem rgba(15,23,42,0.6);
+        overflow: hidden;
+      }
+      .gs-dropdown-menu {
+        display: flex;
+        flex-direction: column;
+      }
+      .gs-dropdown-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.875rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.94rem;
+        font-weight: 500;
+        color: #202124;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      .gs-dropdown-item span.gs-left {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.625rem;
+      }
+      .gs-dropdown-item span.gs-left .emoji {
+        font-size: 1.05rem;
+      }
+      .gs-dropdown-item:not(:first-child) {
+        border-top: 1px solid rgba(226,232,240,0.8);
+      }
+      .gs-dropdown-item .arrow {
+        font-size: 0.75rem;
+        color: #5f6368;
+      }
+      .gs-dropdown-item:hover,
+      .gs-dropdown-item:focus-visible {
+        background: rgba(26,115,232,0.08);
+        outline: none;
+        color: #1a73e8;
+      }
+      .gs-dropdown-item.active {
+        background: rgba(99,102,241,0.12);
+        color: #4338ca;
+      }
+      .gs-explain-panel {
+        flex: 1;
+        min-width: 16.25rem;
+        background: #ffffff;
+        border: 1px solid rgba(216,222,233,0.9);
+        border-radius: clamp(0.7rem, 0.6rem + 0.2vw, 0.85rem);
+        box-shadow: 0 1.5rem 2.8rem -2.4rem rgba(79,70,229,0.45);
+        padding: clamp(1.1rem, 0.95rem + 0.4vw, 1.25rem) clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+      }
+      .gs-panel-section {
+        display: none;
+      }
+      .gs-panel-section.active {
+        display: block;
+      }
+      .gs-panel-section h4 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #312e81;
+      }
+      .gs-panel-section p {
+        color: #4b5563;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+      }
+      .gs-panel-section ul {
+        list-style-type: disc;
+        padding-left: 1.25rem;
+        color: #4b5563;
+      }
+      .gs-panel-section ul li {
+        margin-bottom: 0.375rem;
+      }
+      @media (max-width: 768px) {
+        .gs-dropdown-shell,
+        .gs-explain-panel {
+          width: 100%;
+          max-width: none;
+        }
+      }
+
+      .feedback-overlay,
+      .feedback-modal {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+      }
+
+      .feedback-overlay {
+        backdrop-filter: blur(12px);
+        background: rgba(15, 23, 42, 0.35);
+      }
+
+      .feedback-modal {
+        transform: translateY(24px) scale(0.98);
+      }
+
+      .feedback-popup-open .feedback-overlay,
+      .feedback-popup-open .feedback-modal {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .feedback-popup-open .feedback-modal {
+        transform: translateY(0) scale(1);
+      }
+
+      .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 16px;
+        opacity: 0;
+        border-radius: 2px;
+        animation: confettiFall 1.2s ease-out forwards;
+      }
+
+      @keyframes confettiFall {
+        0% {
+          opacity: 0;
+          transform: translate3d(0, -10px, 0) rotate(-15deg);
+        }
+        25% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translate3d(var(--x-move, 60px), 160px, 0) rotate(45deg);
+        }
+      }
     </style>
     <style>
       html {
@@ -51,19 +1159,30 @@
         scroll-padding-top: 5rem; /* Adjust to height of sticky nav */
       }
     </style>
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("siteUnlocked") === "true") {
+            document.documentElement.classList.add("site-unlocked");
+          }
+        } catch (e) {
+          /* Ignore storage access issues and fall back to overlay */
+        }
+      })();
+    </script>
   </head>
-  <body class="bg-gray-50 text-gray-800 font-sans">
+  <body class="font-sans antialiased text-slate-900">
 
     <!-- Password Overlay -->
-    <div id="password-overlay" class="fixed inset-0 flex flex-col items-center justify-center bg-gray-100 z-50">
-      <div id="lock-icon" class="text-6xl mb-6 text-gray-700 transition-transform duration-700">
+    <div id="password-overlay" class="fixed inset-0 flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-xl z-50 px-4">
+      <div id="lock-icon" class="text-6xl mb-6 text-brand-500 transition-transform duration-700">
         🔒
       </div>
       <div class="relative mb-4 w-64">
         <input id="password-input" type="password" placeholder="Enter password"
-          class="px-4 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10" />
+          class="px-4 py-3 border border-white/70 rounded-2xl w-full bg-white/90 shadow-soft focus:outline-none focus:ring-2 focus:ring-brand-500 pr-10 text-slate-700 placeholder-slate-400" />
         <button type="button" id="toggle-password"
-          class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-indigo-600 focus:outline-none"
+          class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-brand-600 focus:outline-none"
           aria-label="Show password">
           <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -75,7 +1194,7 @@
         </button>
       </div>
       <button id="password-button"
-        class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700 transition">
+        class="inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-brand-500 via-brand-600 to-brand-700 shadow-soft transition transform hover:-translate-y-1">
         Unlock
       </button>
       <p id="password-error" class="text-red-500 mt-3 hidden">Incorrect password, try again.</p>
@@ -85,143 +1204,167 @@
     <div id="site-content" class="hidden">
 
     <!-- Hero -->
-    <header
-      class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20 text-center fade-in"
-    >
-      <h2
-        class="text-5xl font-extrabold mb-2 animate__animated animate__fadeInDown"
-      >
+    <header id="top" class="hero fade-in text-center text-white">
+      <h2 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6 animate__animated animate__fadeInDown">
         Welcome to Your Team Task Tracker
       </h2>
-      <p
-        class="text-xl mb-4 opacity-90 animate__animated animate__fadeInDown animate__delay-1s"
-      >
-        Streamline your workflow, boost productivity, and keep your team
-        aligned.
+      <p class="text-lg sm:text-xl md:text-2xl mb-4 opacity-90 animate__animated animate__fadeInDown animate__delay-1s">
+        Streamline your workflow, boost productivity, and keep your team aligned.
       </p>
-      <p
-        class="max-w-2xl mx-auto text-lg mb-6 opacity-90 animate__animated animate__fadeInDown animate__delay-2s"
-      >
-        Setup instructions, tips, and FAQs — everything you need to get started
-        🚀
+      <p class="max-w-2xl mx-auto text-base sm:text-lg md:text-xl mb-8 opacity-90 animate__animated animate__fadeInDown animate__delay-2s">
+        Setup instructions, tips, and FAQs — everything you need to get started 🚀
       </p>
       <a
         href="https://docs.google.com/spreadsheets/d/1EtryUf_8Ez9dpfVxJMWafHV95VCRmacsGBftemBGPKE/copy?usp=sharing"
         target="_blank"
-        class="mt-6 inline-block bg-white text-indigo-600 font-semibold px-8 py-4 rounded-lg shadow-lg hover:bg-gray-100 transform transition-transform duration-300 hover:scale-105 animate__animated animate__fadeInUp animate__delay-3s"
+        class="hero-cta animate__animated animate__fadeInUp animate__delay-3s"
       >
         Get Your Copy
       </a>
     </header>
 
     <!-- Voice Instructions Banner -->
-    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-md mb-8 text-center">
-      <p class="text-gray-700 text-lg">
-        Prefer to listen instead of reading?
-        <button id="voice-banner" class="ml-2 px-3 py-1 rounded bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
-          🔊 Hear Instructions
-        </button>
-      </p>
+    <div class="announcement-banner fade-in">
+      <div class="announcement-content">
+        <div class="announcement-copy">
+          <span class="announcement-badge">🎧 Audio Companion</span>
+          <h3 class="announcement-heading">Prefer to listen instead of reading?</h3>
+          <p>Launch the narrated setup and get every key step, examples included, while you prep the tracker.</p>
+          <span class="announcement-footnote">Guided audio walkthrough • under five minutes.</span>
+        </div>
+        <div class="announcement-action">
+          <div class="audio-visualizer" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <button id="voice-banner" class="announcement-button">
+            🔊 Hear Instructions
+          </button>
+          <span class="action-caption">Queue it for your next stand-up warm-up.</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Responsive Sticky Navigation Bar -->
-    <nav class="bg-white shadow fixed top-0 left-0 w-full z-50">
-      <!-- Desktop nav links, indicator bar removed -->
-      <div id="desktop-nav" class="hidden md:flex relative items-center h-14 px-4 space-x-4">
-        <a href="#tabs" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Tabs</span></a>
-        <a href="#teammembers" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Team Members</span></a>
-        <a href="#home" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Home</span></a>
-        <a href="#status" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Status</span></a>
-        <a href="#kanban" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Kanban</span></a>
-        <a href="#taskcentral" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Task Central</span></a>
-        <a href="#setup" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">Setup</span></a>
-        <a href="#faq" class="flex items-center justify-center whitespace-nowrap text-gray-700 px-4 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"><span class="nav-text">FAQ</span></a>
+    <!-- Responsive Navigation -->
+    <nav class="glass-nav" aria-label="Primary navigation">
+      <div class="nav-container">
+        <div class="nav-inner">
+          <a href="#top" class="nav-brand">
+            <img src="logo.png" alt="Team Task Tracker logo" />
+            <span class="hidden sm:block tracking-[0.45em] text-xs text-slate-500">Team Task Tracker</span>
+          </a>
+          <div id="desktop-nav">
+            <a href="#tabs" class="nav-link">Tabs</a>
+            <a href="#teammembers" class="nav-link">Team Members</a>
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#status" class="nav-link">Status</a>
+            <a href="#kanban" class="nav-link">Kanban</a>
+            <a href="#taskcentral" class="nav-link">Task Central</a>
+            <a href="#setup" class="nav-link">Setup</a>
+            <a href="#faq" class="nav-link">FAQ</a>
+          </div>
+          <button
+            id="menu-toggle"
+            class="nav-toggle"
+            type="button"
+            aria-label="Abrir menú de navegación"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+          >
+            <svg class="icon-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M6 18L18 6"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          id="mobile-nav"
+          class="mobile-nav-panel"
+          aria-hidden="true"
+        >
+          <a href="#tabs" class="mobile-nav-link">Tabs</a>
+          <a href="#teammembers" class="mobile-nav-link">Team Members</a>
+          <a href="#home" class="mobile-nav-link">Home</a>
+          <a href="#status" class="mobile-nav-link">Status</a>
+          <a href="#kanban" class="mobile-nav-link">Kanban</a>
+          <a href="#taskcentral" class="mobile-nav-link">Task Central</a>
+          <a href="#setup" class="mobile-nav-link">Setup</a>
+          <a href="#faq" class="mobile-nav-link">FAQ</a>
+        </div>
       </div>
-      <!-- Mobile toggle button and dropdown menu -->
-      <div id="menu-mobile" class="hidden md:hidden px-4 pb-4 space-y-2 bg-white border-t shadow">
-        <a href="#tabs" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Tabs</a>
-        <a href="#teammembers" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Team Members</a>
-        <a href="#home" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Home</a>
-        <a href="#status" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Status</a>
-        <a href="#kanban" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Kanban</a>
-        <a href="#taskcentral" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Task Central</a>
-        <a href="#setup" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">Setup</a>
-        <a href="#faq" class="block text-gray-700 px-3 py-3 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition font-medium">FAQ</a>
-      </div>
-      <!-- Mobile toggle button for menu -->
-      <button id="menu-toggle" class="ml-auto mr-4 md:hidden text-indigo-700 text-2xl focus:outline-none flex" aria-label="Open menu">
-        <!-- SVG for hamburger menu -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
     </nav>
 
 
     <!-- Step 1: Copy & Access -->
-    <main class="pt-16">
-    <section id="copy" class="max-w-4xl mx-auto py-12 px-6 fade-in">
-      <h3 class="text-3xl font-bold text-indigo-700 mb-8">📥 Step 1: Get Your Copy</h3>
-      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+    <main class="site-main">
+    <section id="copy" class="section-block fade-in">
+      <h3 class="mb-6">📥 Step 1: Get Your Copy</h3>
+      <p class="text-lg text-slate-600 max-w-3xl leading-relaxed">
         Click the <b>Get Your Copy</b> button above to create your own version of the Team Task Tracker. Open the file in Google Sheets. Make sure you’re signed in with the Google account where you want to use the tracker.
       </p>
     </section>
 
     <!-- Step 2: Google Sheets Tabs -->
-    <section id="tabs" class="max-w-4xl mx-auto py-12 px-6 fade-in">
-      <h3 class="text-3xl font-bold text-indigo-700 mb-8">📑 Step 2: Explore the Tabs</h3>
-      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+    <section id="tabs" class="section-block fade-in">
+      <h3 class="mb-6">📑 Step 2: Explore the Tabs</h3>
+      <p class="text-lg text-slate-600 max-w-3xl leading-relaxed mb-8">
         In the template, you’ll see tabs such as…
       </p>
       <!-- Accordion style, consistent with FAQ/Task Central -->
-      <div>
+      <div class="space-y-4">
         <!-- Home Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">🏠</span>
             Home
           </summary>
-          <div class="px-4 pb-4 text-gray-700">
+          <div class="accordion-content">
             Center of command to create and manage tasks. Fields include Team Member, Task Name, Priority, Dates, Status, and Recurring column.
           </div>
         </details>
         <!-- Team Members Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">👥</span>
             Team Members
           </summary>
-          <div class="px-4 pb-4 text-gray-700">
+          <div class="accordion-content">
             List of members with names and emails. Populates the dropdown in Home, enables email notifications and Google Calendar sync for admin, and auto‑invites guests (assignees).
           </div>
         </details>
         <!-- Status Configuration Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">⚙️</span>
             Status Configuration
           </summary>
-          <div class="px-4 pb-4 text-gray-700">
+          <div class="accordion-content">
             Rename statuses. Updates automatically across Home, Kanban, counters.
           </div>
         </details>
         <!-- Kanban Board Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">📊</span>
             Kanban Board
           </summary>
-          <div class="px-4 pb-4 text-gray-700">
+          <div class="accordion-content">
             Visual board that updates dynamically based on statuses defined. Helps track progress and bottlenecks.
           </div>
         </details>
         <!-- Timer Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">⏰</span>
             Timer
           </summary>
-          <div class="px-4 pb-4 text-gray-700">
+          <div class="accordion-content">
             Here you configure how long before a task’s due date the email reminders should start, and at what time of day they should arrive. Reminders will keep coming until the task is completed. Task Central uses these settings to schedule notifications and calendar updates automatically for your team.
           </div>
         </details>
@@ -230,19 +1373,19 @@
 
 
     <!-- Step 3: Team Members -->
-    <section id="teammembers" class="max-w-4xl mx-auto py-12 px-6 fade-in">
-      <h3 class="text-3xl font-bold text-indigo-700 mb-8">👥 Step 3: Add Your Team Members</h3>
-      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+    <section id="teammembers" class="section-block fade-in">
+      <h3 class="mb-6">👥 Step 3: Add Your Team Members</h3>
+      <p class="text-lg text-slate-600 max-w-3xl leading-relaxed mb-8">
         Fill out the <b>Team Members 👥</b> tab before creating tasks in Home. This powers the assignee dropdown and email/calendar features.
       </p>
-      <div>
+      <div class="space-y-4">
         <!-- Add Your Teammates -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">📝</span>
             Add Your Teammates (Columns A &amp; B)
           </summary>
-          <div class="px-4 pb-4 text-gray-700">
+          <div class="accordion-content">
             <ul class="list-disc pl-5 space-y-1">
               <li><b>Column A (Name):</b> Type each person’s full name.</li>
               <li><b>Column B (Email):</b> Enter the exact email address.</li>
@@ -250,22 +1393,22 @@
           </div>
         </details>
         <!-- Status Column -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">📈</span>
             Status Column (Column C)
           </summary>
-          <div class="px-4 pb-4 text-gray-700">
+          <div class="accordion-content">
             Shows <b>All Clear</b> if they have no open tasks, or <b>X Pending</b> when they have tasks still in progress. Updates automatically from Home—no formulas to tweak.
           </div>
         </details>
         <!-- Quick View Individual To-Dos -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">🔎</span>
             Quick View: Individual To‑Dos
           </summary>
-          <div class="px-4 pb-4 text-gray-700">
+          <div class="accordion-content">
             <ol class="list-decimal pl-6 space-y-1">
               <li>Click the dropdown at the top‑right.</li>
               <li>Pick a teammate’s name.</li>
@@ -278,78 +1421,78 @@
     </section>
 
     <!-- Step 4: Home -->
-    <section id="home" class="bg-white py-12 px-6 shadow-inner fade-in">
-      <div class="max-w-4xl mx-auto">
-        <h3 class="text-3xl font-bold text-indigo-700 mb-6">
+    <section id="home" class="section-block fade-in">
+      <div class="mx-auto max-w-3xl space-y-8">
+        <h3 class="mb-6">
           🏠 Step 4: Home – Add Your First Tasks
         </h3>
-        <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+        <p class="text-lg text-slate-600 leading-relaxed">
           This is where all your task creation and updates happen. Designed for clarity and ease, the Home section lets you quickly add new tasks and manage existing ones with precision.<br><br>
           <b>Recurring tasks are configured here</b>.
         </p>
-        <h4 class="text-xl font-semibold text-indigo-600 mb-4">
+        <h4 class="section-eyebrow mb-4">
           Adding & Managing Tasks
         </h4>
         <div class="space-y-6">
           <div
-            class="bg-indigo-50 border-l-4 border-indigo-400 p-5 rounded-lg fade-in"
+            class="rounded-2xl border border-white/60 bg-gradient-to-br from-brand-50 via-white to-brand-100 p-6 shadow-soft transition transform hover:-translate-y-1"
           >
-            <h5 class="font-semibold text-indigo-700 mb-1">Team Member</h5>
-            <p class="text-gray-700">
+            <h5 class="font-semibold text-slate-900 text-lg mb-2">Team Member</h5>
+            <p class="text-slate-600 leading-relaxed">
               Select the responsible team member from a dropdown populated
               dynamically from your Team Members sheet. This ensures
               accountability and clear task ownership.
             </p>
           </div>
           <div
-            class="bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-lg fade-in"
+            class="rounded-2xl border border-white/70 bg-gradient-to-br from-amber-50 via-white to-rose-50 p-6 shadow-soft transition transform hover:-translate-y-1"
           >
-            <h5 class="font-semibold text-yellow-700 mb-1">
+            <h5 class="font-semibold text-slate-900 text-lg mb-2">
               Task Name & Description
             </h5>
-            <p class="text-gray-700">
+            <p class="text-slate-600 leading-relaxed">
               Provide a clear, concise title and detailed description for each
               task. This helps your team understand the scope and requirements
               at a glance.
             </p>
           </div>
           <div
-            class="bg-red-50 border-l-4 border-red-400 p-5 rounded-lg fade-in"
+            class="rounded-2xl border border-white/70 bg-gradient-to-br from-rose-50 via-white to-amber-100 p-6 shadow-soft transition transform hover:-translate-y-1"
           >
-            <h5 class="font-semibold text-red-700 mb-1">Priority</h5>
-            <p class="text-gray-700">
+            <h5 class="font-semibold text-slate-900 text-lg mb-2">Priority</h5>
+            <p class="text-slate-600 leading-relaxed">
               Assign priority levels (Low, Medium, High) to help your team focus
               on the most critical tasks first and manage workload effectively.
             </p>
           </div>
           <div
-            class="bg-green-50 border-l-4 border-green-400 p-5 rounded-lg fade-in"
+            class="rounded-2xl border border-white/70 bg-gradient-to-br from-emerald-50 via-white to-teal-100 p-6 shadow-soft transition transform hover:-translate-y-1"
           >
-            <h5 class="font-semibold text-green-700 mb-1">Start & Due Date</h5>
-            <p class="text-gray-700">
+            <h5 class="font-semibold text-slate-900 text-lg mb-2">Start & Due Date</h5>
+            <p class="text-slate-600 leading-relaxed">
               Choose start and due dates for each task, with options for
               recurrence. This ensures timely progress tracking and deadline
               adherence.
             </p>
           </div>
-          <div class="bg-blue-50 border-l-4 border-blue-400 p-5 rounded-lg fade-in">
-            <h5 class="font-semibold text-blue-700 mb-1">Status</h5>
-            <p class="text-gray-700">
+          <div class="rounded-2xl border border-white/70 bg-gradient-to-br from-sky-50 via-white to-indigo-100 p-6 shadow-soft transition transform hover:-translate-y-1">
+            <h5 class="font-semibold text-slate-900 text-lg mb-2">Status</h5>
+            <p class="text-slate-600 leading-relaxed">
               Statuses are fully customizable (names and emojis) and update everywhere (Home, Kanban, counts).
-              <a href="#status" class="underline text-blue-700 hover:text-blue-900">Configure them here</a>.
+              <a href="#status" class="underline text-brand-600 hover:text-brand-700">Configure them here</a>.
             </p>
           </div>
-          <div class="bg-purple-50 border-l-4 border-purple-400 p-5 rounded-lg fade-in">
-            <h5 class="font-semibold text-purple-700 mb-1">Recurring</h5>
-            <p class="text-gray-700">
+          <div class="rounded-2xl border border-white/70 bg-gradient-to-br from-violet-50 via-white to-fuchsia-100 p-6 shadow-soft transition transform hover:-translate-y-1">
+            <h5 class="font-semibold text-slate-900 text-lg mb-2">Recurring</h5>
+            <p class="text-slate-600 leading-relaxed">
               Enter a number of days in the Recurring column. When the task is marked completed (or moved to your custom final status), it will be duplicated and the new copy scheduled that many days ahead. This automates regular activities without manual re‑entry.
             </p>
           </div>
         </div>
         <div class="mt-10 space-y-6">
-          <div class="bg-white border border-gray-200 rounded-lg p-6 shadow">
-            <h4 class="text-lg font-semibold mb-2">Quick Filter Views</h4>
-            <p class="text-gray-700">
+          <div class="rounded-2xl border border-white/70 bg-gradient-to-br from-brand-50 via-white to-brand-100 p-6 shadow-soft">
+            <h4 class="text-lg font-semibold text-slate-900 mb-3">Quick Filter Views</h4>
+            <p class="text-slate-600 leading-relaxed">
               Use <b>Data → Change view</b> to quickly switch between predefined filter views. Examples include <b>Overdue</b>, <b>Due Today</b>, <b>Due in 1–2 Days</b>, <b>Due in 3–6 Days</b>, and <b>Upcoming</b>. There are also views by Status (e.g., Completed). These filters let you instantly focus on what matters most. To return to the full list, click the small <b>✖</b> in the top‑right of the sheet.
             </p>
           </div>
@@ -358,31 +1501,31 @@
     </section>
 
     <!-- Step 5: Status Configuration -->
-    <section id="status" class="max-w-4xl mx-auto py-12 px-6 fade-in">
-      <h3 class="text-3xl font-bold text-indigo-700 mb-8">⚙️ Step 5: Customize Your Statuses</h3>
-      <p class="mb-6 text-gray-700 text-lg max-w-3xl">
+    <section id="status" class="section-block fade-in">
+      <h3 class="mb-6">⚙️ Step 5: Customize Your Statuses</h3>
+      <p class="text-lg text-slate-600 leading-relaxed max-w-3xl mb-6">
         Define the statuses that fit your team’s workflow. Rename them, and the changes will reflect automatically across the template (Home, Kanban, stats, filters).
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300">
+        <div class="rounded-2xl border border-white/70 bg-gradient-to-br from-brand-50 via-white to-brand-100 p-6 shadow-soft transition transform hover:-translate-y-1">
           <div class="text-3xl mb-3">✏️</div>
-          <h4 class="font-semibold text-lg mb-2">Rename</h4>
-          <p class="text-gray-700">
+          <h4 class="font-semibold text-lg text-slate-900 mb-2">Rename</h4>
+          <p class="text-slate-600 leading-relaxed">
             Edit the status labels to match your language (e.g., “Not Started”, “In Progress”, “Blocked”, “Completed”) or your own terms.
           </p>
         </div>
-        <div class="bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300">
+        <div class="rounded-2xl border border-white/70 bg-gradient-to-br from-sky-50 via-white to-indigo-100 p-6 shadow-soft transition transform hover:-translate-y-1">
           <div class="text-3xl mb-3">🔁</div>
-          <h4 class="font-semibold text-lg mb-2">Auto‑updates</h4>
-          <p class="text-gray-700">
+          <h4 class="font-semibold text-lg text-slate-900 mb-2">Auto‑updates</h4>
+          <p class="text-slate-600 leading-relaxed">
             Any change you make updates everywhere automatically—no extra setup.
           </p>
         </div>
       </div>
       <div class="mt-10 space-y-4">
-        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-5">
-          <h5 class="font-semibold text-indigo-700 mb-1">How to configure</h5>
-          <ol class="list-decimal pl-6 space-y-1 text-gray-700">
+        <div class="rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50 via-white to-brand-100 p-6 shadow-soft">
+          <h5 class="font-semibold text-slate-900 mb-2">How to configure</h5>
+          <ol class="list-decimal pl-6 space-y-1 text-slate-600">
             <li>Open the <b>Status Configuration</b> tab in the template.</li>
             <li>Rename statuses and (optionally) add emojis.</li>
             <li>Go back to <b>Home</b> — you’ll see the new labels in the Status column and in the top counters.</li>
@@ -392,242 +1535,384 @@
     </section>
 
     <!-- Step 6: Kanban Board -->
-    <section id="kanban" class="max-w-4xl mx-auto py-12 px-6 fade-in">
-      <h3 class="text-3xl font-bold text-indigo-700 mb-8">📊 Step 6: Visualize in the Kanban Board</h3>
-      <p class="mb-6 text-gray-700 text-lg max-w-3xl">
+    <section id="kanban" class="section-block fade-in">
+      <h3 class="mb-6">📊 Step 6: Visualize in the Kanban Board</h3>
+      <p class="text-lg text-slate-600 leading-relaxed max-w-3xl mb-6">
         Visualize your tasks across fully customizable statuses in real-time. The Kanban board automatically reflects the labels and emojis you define in Status Configuration, giving you a live overview of progress, bottlenecks, and completed work.
       </p>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
-          class="bg-gray-100 rounded-xl border border-gray-300 p-6 shadow-lg flex items-center justify-center text-xl font-semibold cursor-pointer transform transition-transform duration-300 hover:animate-bounce hover:scale-105"
+          class="rounded-2xl border border-white/70 bg-gradient-to-br from-brand-50 via-white to-brand-100 p-6 shadow-soft flex items-center justify-center text-lg font-semibold text-slate-900 cursor-pointer transform transition hover:-translate-y-1"
           aria-label="Not Started Tasks"
         >
           📝 Not Started
         </div>
         <div
-          class="bg-yellow-100 rounded-xl border border-yellow-300 p-6 shadow-lg flex items-center justify-center text-xl font-semibold cursor-pointer transform transition-transform duration-300 hover:animate-bounce hover:scale-105"
+          class="rounded-2xl border border-white/70 bg-gradient-to-br from-amber-50 via-white to-rose-50 p-6 shadow-soft flex items-center justify-center text-lg font-semibold text-slate-900 cursor-pointer transform transition hover:-translate-y-1"
           aria-label="In Progress Tasks"
         >
           ⏳ In Progress
         </div>
         <div
-          class="bg-red-100 rounded-xl border border-red-300 p-6 shadow-lg flex items-center justify-center text-xl font-semibold cursor-pointer transform transition-transform duration-300 hover:animate-bounce hover:scale-105"
+          class="rounded-2xl border border-white/70 bg-gradient-to-br from-rose-50 via-white to-red-100 p-6 shadow-soft flex items-center justify-center text-lg font-semibold text-slate-900 cursor-pointer transform transition hover:-translate-y-1"
           aria-label="Blocked Tasks"
         >
           🚧 Blocked
         </div>
         <div
-          class="bg-green-100 rounded-xl border border-green-300 p-6 shadow-lg flex items-center justify-center text-xl font-semibold cursor-pointer transform transition-transform duration-300 hover:animate-bounce hover:scale-105"
+          class="rounded-2xl border border-white/70 bg-gradient-to-br from-emerald-50 via-white to-teal-100 p-6 shadow-soft flex items-center justify-center text-lg font-semibold text-slate-900 cursor-pointer transform transition hover:-translate-y-1"
           aria-label="Completed Tasks"
         >
           ✅ Completed
         </div>
       </div>
-      </div>
-      <div class="mt-8 bg-white border border-gray-200 rounded-lg p-6 shadow">
-        <h4 class="text-lg font-semibold mb-6 text-center">Color Borders = Instant Priority</h4>
+      <div class="mt-8 rounded-3xl border border-white/70 bg-gradient-to-br from-white via-brand-50 to-white p-6 shadow-soft">
+        <h4 class="text-lg font-semibold text-slate-900 mb-6 text-center">Color Borders = Instant Priority</h4>
         <div class="flex flex-col md:flex-row justify-center gap-6">
-          <div class="flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-5 py-3 shadow min-w-[220px] justify-center">
+          <div class="flex items-center gap-3 rounded-2xl border border-rose-100 bg-rose-50/80 px-5 py-3 shadow-soft min-w-[13.75rem] justify-center">
             <span class="text-2xl">🔴</span>
-            <span class="font-medium text-gray-700">High&nbsp;→&nbsp;Red border</span>
+            <span class="font-medium text-slate-700">High&nbsp;→&nbsp;Red border</span>
           </div>
-          <div class="flex items-center gap-3 bg-orange-50 border border-orange-200 rounded-lg px-5 py-3 shadow min-w-[220px] justify-center">
+          <div class="flex items-center gap-3 rounded-2xl border border-orange-100 bg-orange-50/80 px-5 py-3 shadow-soft min-w-[13.75rem] justify-center">
             <span class="text-2xl">🟠</span>
-            <span class="font-medium text-gray-700">Medium&nbsp;→&nbsp;Orange border</span>
+            <span class="font-medium text-slate-700">Medium&nbsp;→&nbsp;Orange border</span>
           </div>
-          <div class="flex items-center gap-3 bg-yellow-50 border border-yellow-200 rounded-lg px-5 py-3 shadow min-w-[220px] justify-center">
+          <div class="flex items-center gap-3 rounded-2xl border border-yellow-100 bg-yellow-50/80 px-5 py-3 shadow-soft min-w-[13.75rem] justify-center">
             <span class="text-2xl">🟡</span>
-            <span class="font-medium text-gray-700">Low&nbsp;→&nbsp;Yellow border</span>
+            <span class="font-medium text-slate-700">Low&nbsp;→&nbsp;Yellow border</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Step 7: Task Central -->
-    <section id="taskcentral" class="max-w-4xl mx-auto py-12 px-6 fade-in">
-      <h3 class="text-3xl font-bold text-indigo-700 mb-8">✨ Step 7: Use Task Central Features</h3>
-      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
-        All core actions are accessible from ✨ Task Central in the menu bar. This is a <b>custom menu created by Sheets Brewery</b> using advanced Google Apps Script programming behind the scenes. It centralizes the most important functions so you don’t have to dig through multiple tabs or scripts manually. Here’s how each function works and what it does.
-      </p>
-      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-lg mb-8">
-        <h4 class="font-semibold text-yellow-700 mb-2">First‑time setup</h4>
-        <p class="text-gray-700">
-          The first time you use this template, you’ll need to run
-          <b>✅ Enable Email Notifications</b> from the ✨ Task Central menu.
-          Google will prompt you for permissions — this is required for the automation to work.
-          Don’t worry, we guide you through the steps in the <a href="#setup" class="underline text-yellow-700 hover:text-yellow-900">Setup &amp; Permissions</a> section below.
-        </p>
+    <!-- Step 7: Task Central Simulator -->
+    <section id="taskcentral" class="section-block fade-in">
+      <h3 class="text-center text-3xl font-semibold text-slate-900 mb-6">⚡ Step 7: Use Task Central Features</h3>
+
+      <div class="gs-stage-wrapper">
+        <div class="gs-menu-stage" id="gsMenuStage">
+          <div class="gs-sheetbar">
+            <div class="gs-doc-icon" aria-hidden="true"></div>
+            <div class="gs-title-stack">
+              <div class="gs-title-line">
+                <span class="gs-title-name">Copy Of Team Task Tracker</span>
+                <span class="gs-icon-set" aria-hidden="true">
+                  <svg class="gs-icon-svg" viewBox="0 0 24 24" role="presentation">
+                    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" />
+                  </svg>
+                  <svg class="gs-icon-svg" viewBox="0 0 24 24" role="presentation">
+                    <path d="M3 7a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="11 12 13.5 14.5 11 17" />
+                    <line x1="13.5" y1="14.5" x2="8.5" y2="14.5" />
+                  </svg>
+                  <svg class="gs-icon-svg" viewBox="0 0 24 24" role="presentation">
+                    <path d="M6.5 18h10.8a3.2 3.2 0 0 0 .3-6.4A5.1 5.1 0 0 0 8 9.2a3.5 3.5 0 0 0-1.5 8.8Z" />
+                    <polyline points="10 13.5 12 15.5 16 11.5" />
+                  </svg>
+                </span>
+              </div>
+              <div class="gs-status-line">Last edit was seconds ago</div>
+            </div>
+          </div>
+          <div class="gs-menubar">
+            <span class="gs-menu-item">File</span>
+            <span class="gs-menu-item">Edit</span>
+            <span class="gs-menu-item">View</span>
+            <span class="gs-menu-item">Insert</span>
+            <span class="gs-menu-item">Format</span>
+            <span class="gs-menu-item">Data</span>
+            <span class="gs-menu-item">Tools</span>
+            <span class="gs-menu-item">Extensions</span>
+            <span class="gs-menu-item">Help</span>
+            <button id="taskCentralTrigger" class="gs-menu-task" type="button" aria-expanded="false" aria-controls="menuContent">
+              <span aria-hidden="true">✨</span>
+              Task Central
+            </button>
+          </div>
+        </div>
       </div>
-      <!-- Accordion style feature list -->
-      <div>
-        <!-- Email Notifications Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
-            <span class="text-xl">📩</span>
-            Email Notifications
-          </summary>
-          <div class="px-4 pb-4 text-gray-700">
-            <ul class="list-disc pl-5 space-y-1">
-              <li><b>Enable Email Notifications</b> — Activates the reminder system. Required the first time you use the template (will ask for Google permissions).</li>
-              <li><b>Check Notification Status</b> — Shows whether reminders are currently active.</li>
-              <li><b>Disable All Notifications</b> — Turns off reminders completely if you want to pause emails.</li>
-              <li><b>Refresh Notification Schedule</b> — Fixes the schedule if you change the reminder hour in the Timer ⏰ sheet.</li>
-            </ul>
-          </div>
-        </details>
 
-        <!-- Auto-Assign Tasks Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
-            <span class="text-xl">👥</span>
-            Auto‑Assign Tasks
-          </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            Automatically assigns unassigned tasks to a random team member from the Team Members sheet. Helps distribute work evenly without manual effort.
-          </p>
-        </details>
+      <p class="mb-6 text-slate-600 text-base sm:text-lg max-w-[60rem] mx-auto text-left leading-relaxed">
+        Sheets Brewery custom-built the <span class="font-semibold text-brand-600">Task Central</span> menu so every automation your tracker needs lives in one place. You’ll always find it at the far right of the Google Sheets menu bar, right after <b>Help</b> — exactly as you see here.
+      </p>
+      <p class="mb-10 text-slate-600 text-base sm:text-lg max-w-[60rem] mx-auto text-left leading-relaxed">
+        Use this replica as your quick-start map. Click <span class="font-semibold text-brand-600">Task Central</span> to pop open the simulator, practice the option you need, then repeat the exact click in your live template with confidence.
+      </p>
 
-        <!-- Show/Hide Completed Tasks Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
-            <span class="text-xl">👁</span>
-            Show/Hide Completed Tasks
-          </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            Toggles the visibility of rows marked with your completed status (or custom final status). Keeps the workspace focused on open work.
-          </p>
-        </details>
-
-        <!-- Task Row Colors Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
-            <span class="text-xl">🎨</span>
-            Task Row Colors
-          </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            Opens a color customization panel for task rows. You can set colors for Overdue, Due Today, and Due Soon. Once configured, colors are saved and applied automatically across the sheet.
-          </p>
-        </details>
-
-        <!-- Focus Sprint Planner Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
-            <span class="text-xl">⏱</span>
-            Focus Sprint Planner (Bonus)
-          </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            Opens the built‑in sprint planning tool (for those with access to the sheet). Lets you group tasks into focused sprints with timers, helping your team stay on track during work sessions. Includes <b>Pomodoro</b> and other productivity methods. Inside, you’ll also find a <b>❓ help icon</b> — click it for detailed guidance on how to use the planner effectively.
-          </p>
-        </details>
-
-        <!-- Google Calendar Sync Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
-            <span class="text-xl">🗓</span>
-            Google Calendar Sync
-          </summary>
-          <div class="px-4 pb-4 text-gray-700">
-            <ul class="list-disc pl-5 space-y-1">
-              <li><b>Update Google Calendar Events</b> — One‑click manual sync. Adds new tasks with due dates and removes calendar events for tasks you’ve completed.</li>
-            </ul>
-            <p class="mt-3">
-              After you accept permissions the first time, syncing runs <b>automatically every night at 12:00 AM</b> — new tasks are added, and completed ones are removed.
-            </p>
-            <div class="mt-3 bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded">
-              <p class="text-sm">
-                <b>For your team members:</b> Each person should set this in their own Google account so invites appear automatically:
-              </p>
-              <ol class="text-sm text-gray-700 pl-5 list-decimal mt-2 space-y-1">
-                <li>Open <b>Google Calendar</b> on the web (calendar.google.com).</li>
-                <li>Click the <b>gear</b> (top‑right) → <b>Settings</b>.</li>
-                <li>In the left sidebar, select <b>Event settings</b>.</li>
-                <li>Find <b>Add invitations to my calendar</b> and choose <b>From everyone</b>.</li>
-              </ol>
-              <p class="text-xs text-gray-600 mt-2">
-                Tip: On some mobile devices, this appears under <b>Google Calendar app → ☰ → Settings → General → Add invitations to my calendar</b>. Each teammate must adjust this in their own account.
-              </p>
+      <div id="menuContent" class="hidden mt-8">
+        <div class="rounded-3xl border border-white/70 bg-white/95 shadow-soft p-5 sm:p-8 text-left">
+          <div class="gs-sim-body">
+            <div class="gs-dropdown-shell">
+              <div class="gs-dropdown-menu">
+                <button class="gs-dropdown-item active" type="button" data-target="planner">
+                  <span class="gs-left">
+                    <span class="emoji">🧠</span>
+                    <span>Focus Sprint Planner</span>
+                  </span>
+                </button>
+                <button class="gs-dropdown-item" type="button" data-target="reminders">
+                  <span class="gs-left">
+                    <span class="emoji">📬</span>
+                    <span>Reminders</span>
+                  </span>
+                  <span class="arrow">▸</span>
+                </button>
+                <button class="gs-dropdown-item" type="button" data-target="calendar">
+                  <span class="gs-left">
+                    <span class="emoji">🗓️</span>
+                    <span>Calendar</span>
+                  </span>
+                  <span class="arrow">▸</span>
+                </button>
+                <button class="gs-dropdown-item" type="button" data-target="tasks">
+                  <span class="gs-left">
+                    <span class="emoji">✅</span>
+                    <span>Tasks</span>
+                  </span>
+                  <span class="arrow">▸</span>
+                </button>
+                <button class="gs-dropdown-item" type="button" data-target="appearance">
+                  <span class="gs-left">
+                    <span class="emoji">🎨</span>
+                    <span>Appearance</span>
+                  </span>
+                  <span class="arrow">▸</span>
+                </button>
+                <button class="gs-dropdown-item" type="button" data-target="support">
+                  <span class="gs-left">
+                    <span class="emoji">🆘</span>
+                    <span>Help &amp; Support</span>
+                  </span>
+                  <span class="arrow">▸</span>
+                </button>
+              </div>
+            </div>
+            <div class="gs-explain-panel">
+              <div class="gs-panel-section active" data-panel="planner">
+                <h4>🧠 Focus Sprint Planner</h4>
+                <p>Launch the deep-work dashboard that comes with Pomodoro timers, focus sprints, goal checkpoints, and quick retro notes.</p>
+                <ul>
+                  <li>Set a sprint duration and let the built-in timer keep everyone on track.</li>
+                  <li>Capture sprint goals so priorities are clear before the clock starts.</li>
+                  <li>Use the retro notes to record blockers or wins while they’re still fresh.</li>
+                </ul>
+              </div>
+              <div class="gs-panel-section" data-panel="reminders">
+                <h4>📬 Reminders</h4>
+                <p>Keep inbox nudges under control without touching the script editor.</p>
+                <ul>
+                  <li><b>Enable Daily Emails</b> – activate automated reminders using the timing you set on the Timer sheet.</li>
+                  <li><b>Reminder Control Center</b> – check whether digests are on, how many days ahead they send, and the delivery time from your Timer sheet.</li>
+                  <li><b>Disable Reminder Emails</b> – pause notifications temporarily without erasing your rules.</li>
+                  <li><b>Refresh Notification Schedule</b> – push Timer sheet updates live so tomorrow's emails follow the new plan.</li>
+                </ul>
+              </div>
+              <div class="gs-panel-section" data-panel="calendar">
+                <h4>🗓️ Calendar</h4>
+                <p>Sync your tracker with Google Calendar whenever you need to keep the team’s agenda aligned.</p>
+                <ul>
+                  <li><b>Open Calendar Automation Panel</b> – connect the sheet to a calendar and map which columns fill each event field.</li>
+                  <li><b>Run Calendar Sync Now</b> – push the latest tasks into Google Calendar on demand.</li>
+                  <li><b>Enable Daily Sync</b> – schedule an automatic overnight sync so calendars start each day up to date.</li>
+                  <li><b>Pause Daily Sync</b> – temporarily stop the automation while keeping your mapping intact.</li>
+                </ul>
+              </div>
+              <div class="gs-panel-section" data-panel="tasks">
+                <h4>✅ Tasks</h4>
+                <p>Handle the repetitive admin work so you can focus on managing the team.</p>
+                <ul>
+                  <li><b>Auto‑Assign Unassigned Tasks</b> – distribute new work using the capacity rules you configured.</li>
+                  <li><b>Show or Hide Completed Rows</b> – clear completed jobs during meetings, then bring them back when you’re ready to review.</li>
+                  <li><b>Update Recurring Tasks Now</b> – trigger the next cycle immediately instead of waiting for the scheduled refresh.</li>
+                </ul>
+              </div>
+              <div class="gs-panel-section" data-panel="appearance">
+                <h4>🎨 Appearance</h4>
+                <p>Refresh the visual language of your tracker in a couple of clicks.</p>
+                <ul>
+                  <li><b>Customize Task Row Colors</b> – open the guided color picker to update priority, status, or category palettes across the sheet.</li>
+                  <li>Preview changes instantly so you can lock in the combination that keeps your team engaged.</li>
+                </ul>
+              </div>
+              <div class="gs-panel-section" data-panel="support">
+                <h4>🆘 Help &amp; Support</h4>
+                <p>Stay current, get help fast, and support the community that keeps Task Central growing.</p>
+                <ul>
+                  <li><b>Contact Sheets Brewery</b> – jump straight to our support form for hands-on help from the folks who built your automations.</li>
+                  <li><b>Leave a Review on Etsy</b> – share your results and help other teams discover the system.</li>
+                </ul>
+                <p class="mt-3 text-sm text-brand-600">If you ever see <b>🚀 Update Needed — Click to Refresh</b> at the top of Task Central, run it once to refresh the menu helpers before using the other options.</p>
+              </div>
             </div>
           </div>
-        </details>
+        </div>
+      </div>
 
-
-        <!-- Leave a Review Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
-            <span class="text-xl">⭐</span>
-            Leave a Review on Etsy
-          </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            Opens the Etsy page where you can leave a review for Sheets Brewery. Reviews help us grow and improve the product for everyone.
-          </p>
-        </details>
-
-
-        <!-- Help & Support Accordion -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
-            <span class="text-xl">🛠</span>
-            Help &amp; Support
-          </summary>
-          <div class="px-4 pb-4 text-gray-700">
-            <ul class="list-disc pl-5 space-y-1">
-              <li><b>Contact Sheets Brewery</b> — Direct link to support if you need assistance or run into issues.</li>
-            </ul>
-            <div class="mt-3 bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded">
-              <p><b>✨ Install the Latest Version</b> — Normally you won’t need this. Only use it if a new update is released. Just follow the popup instructions with simple copy‑and‑paste steps — no coding skills required.</p>
-            </div>
+      <div class="rounded-3xl border border-white/70 bg-gradient-to-br from-brand-50 via-white to-brand-100 shadow-soft p-5 sm:p-8 mt-6">
+        <div class="rounded-2xl border border-white/60 bg-white/90 p-4 sm:p-5 text-brand-700 font-medium mb-5 text-sm sm:text-base">
+          When the Task Central dropdown appears, follow this mini playbook:
+          <ol class="list-decimal pl-6 mt-3 space-y-1 text-slate-600 text-sm sm:text-base font-normal">
+            <li>In your template, wait a second for the <b>✨ Task Central</b> menu to load after opening the file.</li>
+            <li>Click <b>Task Central</b> → match the option you need with the explanations above.</li>
+            <li>Run the command confidently, knowing you’ve already previewed the exact workflow here.</li>
+          </ol>
+          <div class="mt-4 flex items-start gap-2 text-brand-600 text-sm sm:text-base">
+            <span aria-hidden="true" class="pt-0.5">🔐</span>
+            <span>First-time setup tip: if Google prompts you for permissions, approve them once and every Task Central automation will be unlocked. We walk through the approval screens step by step in the permissions section below.</span>
           </div>
-        </details>
+        </div>
       </div>
     </section>
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const taskCentralBtn = document.getElementById("taskCentralTrigger");
+        const content = document.getElementById("menuContent");
+        const dropdownItems = document.querySelectorAll(".gs-dropdown-item");
+        const panels = document.querySelectorAll(".gs-panel-section");
+        const stageWrapper = document.querySelector(".gs-stage-wrapper");
+        const stage = document.getElementById("gsMenuStage");
+        let scaleRaf = null;
+
+        // Scale the Google Sheets replica to fit the available width while keeping proportions.
+        const scaleStage = () => {
+          if (!stage || !stageWrapper) return;
+          stage.style.transform = "";
+          stage.style.position = "static";
+          stage.style.left = "";
+          stage.style.top = "";
+          stageWrapper.style.height = "auto";
+
+          const naturalWidth = stage.offsetWidth;
+          const naturalHeight = stage.offsetHeight;
+          const available = stageWrapper.clientWidth;
+
+          if (!naturalWidth || !available) {
+            stage.style.position = "static";
+            scaleRaf = null;
+            return;
+          }
+
+          const scale = available / naturalWidth;
+
+          stage.style.position = "absolute";
+          stage.style.top = "0";
+          stage.style.left = "50%";
+          stage.style.transformOrigin = "top center";
+          stage.style.transform = `translateX(-50%) scale(${scale})`;
+          stageWrapper.style.height = `${naturalHeight * scale}px`;
+          scaleRaf = null;
+        };
+
+        const requestScale = () => {
+          if (scaleRaf) cancelAnimationFrame(scaleRaf);
+          scaleRaf = requestAnimationFrame(scaleStage);
+        };
+
+        const activatePanel = (key) => {
+          if (!key) return;
+          dropdownItems.forEach(item => {
+            item.classList.toggle("active", item.dataset.target === key);
+          });
+          panels.forEach(panel => {
+            panel.classList.toggle("active", panel.dataset.panel === key);
+          });
+          requestScale();
+        };
+
+        const setDefaultState = () => activatePanel("planner");
+
+        if (dropdownItems.length) {
+          dropdownItems.forEach(item => {
+            item.addEventListener("click", () => {
+              activatePanel(item.dataset.target);
+            });
+          });
+        }
+
+        if (taskCentralBtn && content) {
+          taskCentralBtn.addEventListener("click", () => {
+            const isHidden = content.classList.contains("hidden");
+            if (isHidden) {
+              content.classList.remove("animate__animated", "animate__fadeInUp");
+              void content.offsetWidth;
+              content.classList.remove("hidden");
+              taskCentralBtn.classList.add("active");
+              taskCentralBtn.setAttribute("aria-expanded", "true");
+              content.classList.add("animate__animated", "animate__fadeInUp");
+              setDefaultState();
+            } else {
+              content.classList.add("hidden");
+              taskCentralBtn.classList.remove("active");
+              taskCentralBtn.setAttribute("aria-expanded", "false");
+              content.classList.remove("animate__animated", "animate__fadeInUp");
+            }
+            requestScale();
+          });
+        } else {
+          setDefaultState();
+        }
+
+        window.addEventListener("resize", requestScale);
+        window.addEventListener("load", requestScale);
+        setDefaultState();
+        requestScale();
+      });
+    </script>
+
     <!-- Step 8: Setup & Permissions -->
-    <section id="setup" class="max-w-4xl mx-auto py-12 px-6 fade-in">
-      <h3 class="text-3xl font-bold text-indigo-700 mb-8">
+    <section id="setup" class="section-block fade-in">
+      <h3 class="mb-6">
         ⚙️ Step 8: Setup & Permissions (Enable Automation)
       </h3>
-      <p class="mb-8 text-gray-700 text-lg max-w-3xl">
+      <p class="text-lg text-slate-600 leading-relaxed max-w-3xl mb-8">
         Follow these simple steps to get your Team Task Tracker up and running
         quickly. Each step ensures your system is configured correctly for
         smooth task management and timely notifications.
       </p>
       <div class="space-y-6">
         <div
-          class="flex items-center bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
+          class="flex flex-col sm:flex-row items-start sm:items-center gap-5 rounded-2xl border border-white/70 bg-gradient-to-br from-brand-50 via-white to-brand-100 p-6 shadow-soft transition transform hover:-translate-y-1 cursor-pointer"
         >
-          <div class="text-indigo-600 text-3xl mr-5">⚡</div>
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/80 text-2xl text-brand-600 shadow-soft">⚡</div>
           <div>
-            <h4 class="font-semibold text-lg mb-1">Access Task Central</h4>
-            <p class="text-gray-600">
+            <h4 class="font-semibold text-lg text-slate-900 mb-2">Access Task Central</h4>
+            <p class="text-slate-600 leading-relaxed">
               Navigate to <b>✨ Task Central</b> in the top menu bar to start
               configuring your tracker.
             </p>
           </div>
         </div>
         <div
-          class="flex items-center bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
+          class="flex flex-col sm:flex-row items-start sm:items-center gap-5 rounded-2xl border border-white/70 bg-gradient-to-br from-emerald-50 via-white to-teal-100 p-6 shadow-soft transition transform hover:-translate-y-1 cursor-pointer"
         >
-          <div class="text-green-500 text-3xl mr-5">✅</div>
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/80 text-2xl text-emerald-500 shadow-soft">✅</div>
           <div>
-            <h4 class="font-semibold text-lg mb-1">
-              Enable Email Notifications
+            <h4 class="font-semibold text-lg text-slate-900 mb-2">
+              Enable Daily Emails
             </h4>
-            <p class="text-gray-600">
-              Click <b>✅ Enable Email Notifications</b> to activate reminders
-              and keep your team updated automatically.
+            <p class="text-slate-600 leading-relaxed">
+              Click any automation inside <b>Task Central</b>—for example
+              <b>✅ Enable Daily Emails</b>—to run it and keep your team
+              updated automatically. The very first time you trigger a command,
+              Google may prompt you to review permissions; approve them once and
+              you’re set.
             </p>
           </div>
         </div>
         <div
-          class="flex items-center bg-white rounded-lg p-6 shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
+          class="flex flex-col sm:flex-row items-start sm:items-center gap-5 rounded-2xl border border-white/70 bg-gradient-to-br from-amber-50 via-white to-orange-100 p-6 shadow-soft transition transform hover:-translate-y-1 cursor-pointer"
         >
-          <div class="text-yellow-400 text-3xl mr-5">🔒</div>
+          <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/80 text-2xl text-amber-500 shadow-soft">🔒</div>
           <div>
-            <h4 class="font-semibold text-lg mb-1">Grant Permissions</h4>
-            <p class="text-gray-700">
+            <h4 class="font-semibold text-lg text-slate-900 mb-2">Grant Permissions</h4>
+            <p class="text-slate-600 leading-relaxed">
               The first time you use the template, Google will ask you for permission. This is normal for custom scripts.
+              <span class="block mt-4 rounded-2xl border border-brand-100 bg-gradient-to-r from-brand-50 via-white to-brand-100 px-4 py-3 text-sm text-slate-700 leading-relaxed">
+                💡 Tip: If the prompt hasn’t appeared yet, run any <b>Task Central</b> option once—Google Sheets will display the authorization dialog so you can approve it and continue.
+              </span>
               <br/><br/>
-              <ol class="list-decimal pl-6 space-y-1 text-gray-700">
+              <ol class="list-decimal pl-6 space-y-1 text-slate-600">
                 <li>Click <b>OK</b> on the permissions prompt.</li>
                 <li>Select the Google account you want to use.</li>
                 <li>On the warning screen, scroll down and click <b>Advanced</b>.</li>
@@ -635,7 +1920,7 @@
                 <li>Review the permissions requested and click <b>Allow</b>.</li>
               </ol>
               <br/>
-              <span class="text-sm text-gray-500">✔ The script only touches your spreadsheet and Google Calendar—nothing else.</span>
+              <span class="text-sm text-slate-500">✔ The script only touches your spreadsheet and Google Calendar—nothing else.</span>
             </p>
           </div>
         </div>
@@ -648,94 +1933,78 @@
 
 
     <!-- FAQ -->
-    <section id="faq" class="bg-gray-50 py-12 px-6 fade-in">
-      <div class="max-w-4xl mx-auto">
-        <h3 class="text-3xl font-bold text-indigo-700 mb-8">
+    <section id="faq" class="section-block fade-in">
+      <div class="mx-auto max-w-3xl space-y-4">
+        <h3 class="mb-6">
           ❓ Step 9: FAQ & Troubleshooting
         </h3>
-        <details
-          class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden"
-        >
-          <summary
-            class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none"
-          >
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">🔒</span>
             Why does Google show "unverified app"?
           </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            It’s Google’s standard security warning for apps that haven’t
-            undergone full verification. This doesn’t mean it’s unsafe. Here’s
-            what to do:
-            <br /><br />
-            1. On the warning screen, scroll down and click <b>Advanced</b>.
-            <br />
-            2. You’ll see a link that says
-            <i>Go to Team Task Tracker (unsafe)</i> — click it to continue.
-            <br />
-            3. Review the list of permissions and click <b>Allow</b> to grant
-            access. <br /><br />
-            The script only interacts with your spreadsheet and Google Calendar.
-            No other data is touched.
-          </p>
+          <div class="accordion-content space-y-3">
+            <p>It’s Google’s standard security warning for apps that haven’t undergone full verification. This doesn’t mean it’s unsafe. Here’s what to do:</p>
+            <ol class="list-decimal pl-6 space-y-1">
+              <li>On the warning screen, scroll down and click <b>Advanced</b>.</li>
+              <li>Click <i>Go to Team Task Tracker (unsafe)</i> to continue.</li>
+              <li>Review the permissions requested and click <b>Allow</b>.</li>
+            </ol>
+            <p>The script only interacts with your spreadsheet and Google Calendar. No other data is touched.</p>
+          </div>
         </details>
-        <details
-          class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden"
-        >
-          <summary
-            class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none"
-          >
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">📧</span>
             I’m not getting reminder emails—what should I check?
           </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            Verify that notifications are enabled in Task Central, ensure email
-            addresses are correct in the Team Members sheet, and confirm your
-            timezone settings are accurate.
-          </p>
+          <div class="accordion-content">
+            <p>Verify that notifications are enabled in Task Central, ensure email addresses are correct in the Team Members sheet, and confirm your timezone settings are accurate.</p>
+          </div>
         </details>
         <!-- FAQ ADDITIONS -->
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">⏰</span>
             My reminders are late — what’s the timing window?
           </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            If you pick hour “7,” the script runs sometime between <b>7:00–8:00 AM</b> each day. Adjust the hour in the <b>Timer</b> tab if needed.
-          </p>
+          <div class="accordion-content">
+            <p>If you pick hour “7,” the script runs sometime between <b>7:00–8:00 AM</b> each day. Adjust the hour in the <b>Timer</b> tab if needed.</p>
+          </div>
         </details>
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">🧹</span>
             My filters aren’t cleared — how do I reset the view?
           </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            Click the little <b>✖</b> in the top‑right of your sheet to clear any active filter and show all rows again.
-          </p>
+          <div class="accordion-content">
+            <p>Click the little <b>✖</b> in the top‑right of your sheet to clear any active filter and show all rows again.</p>
+          </div>
         </details>
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">🛠</span>
             Can I rename sheets or move columns?
           </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            Not by default — the scripts look for the tabs <b>Home 🏠</b>, <b>Team Members 👥</b>, and <b>Timer ⏰</b>, plus specific column spots. Renaming a sheet or shifting key columns will break the automation.
-          </p>
+          <div class="accordion-content">
+            <p>Not by default — the scripts look for the tabs <b>Home 🏠</b>, <b>Team Members 👥</b>, and <b>Timer ⏰</b>, plus specific column spots. Renaming a sheet or shifting key columns will break the automation.</p>
+          </div>
         </details>
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">✅</span>
             What happens when I complete a task?
           </summary>
-          <p class="px-4 pb-4 text-gray-700">
-            The related Google Calendar event is removed automatically, keeping your schedule clean.
-          </p>
+          <div class="accordion-content">
+            <p>The related Google Calendar event is removed automatically, keeping your schedule clean.</p>
+          </div>
         </details>
-        <details class="mb-4 border border-gray-300 rounded-lg bg-white shadow transition-all duration-300 overflow-hidden">
-          <summary class="cursor-pointer font-semibold p-4 flex items-center gap-3 select-none">
+        <details class="accordion-card">
+          <summary>
             <span class="text-xl">📆</span>
             Why don’t I see calendar events?
           </summary>
-          <div class="px-4 pb-4 text-gray-700 space-y-2">
+          <div class="accordion-content space-y-2">
             <p><b>You’re an assignee (guest):</b> Assignees with Gmail are auto‑invited as guests. In <b>Google Calendar → Settings → Event Settings → Add invitations to my calendar</b>, choose <b>From everyone</b>. Then accept the invite in your email.</p>
             <p><b>Calendar sharing & visibility:</b> Events live in the sheet owner’s calendar. Make sure that calendar is shared with you and enabled under <b>My calendars</b>.</p>
             <p><b>Run the update:</b> New tasks only appear when you click <b>✨ Task Central → Update Google Calendar Events</b> or during the overnight sync.</p>
@@ -744,79 +2013,290 @@
       </div>
     </section>
 
+
     <!-- Footer -->
-    <footer
-      class="bg-gradient-to-r from-indigo-100 to-purple-100 shadow mt-12 fade-in"
-    >
-      <div class="max-w-7xl mx-auto px-6 py-8 text-center">
-        <p class="text-gray-600 mb-4">
+    <footer class="fade-in mt-16">
+      <div class="max-w-4xl mx-auto px-6 py-12 text-center rounded-3xl border border-white/70 bg-gradient-to-br from-brand-50 via-white to-brand-100 shadow-soft">
+        <p class="text-slate-600 mb-4">
           Made with 🍺 by Sheets Brewery —
           <a
             href="https://www.etsy.com/shop/SheetsBrewery"
             target="_blank"
-            class="text-indigo-600 hover:underline transition-colors duration-300"
+            class="text-brand-600 hover:underline transition-colors duration-300"
             >Visit Shop</a
           >
         </p>
         <a
           href="https://www.etsy.com/shop/SheetsBrewery#reviews"
           target="_blank"
-          class="inline-block bg-indigo-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-indigo-700 transform transition-transform duration-300 hover:scale-105"
+          class="inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-brand-500 via-brand-600 to-brand-700 shadow-soft transition transform hover:-translate-y-1"
           >⭐ Leave a Review</a
         >
       </div>
     </footer>
 
     <!-- Voice Instructions Button and Controls -->
-    <div id="voice-controls">
-      <div class="text-center my-8">
-        <button id="voice-instructions" class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition">
-          🔊 Hear Instructions
+    <div id="voice-controls" class="section-block voice-utility fade-in">
+      <button id="voice-instructions" class="inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-brand-500 via-brand-600 to-brand-700 shadow-soft transition transform hover:-translate-y-1">
+        🔊 Hear Instructions
+      </button>
+      <div class="control-group">
+        <label for="voice-speed" class="block text-sm font-medium text-slate-700">Speech Speed</label>
+        <input id="voice-speed" type="range" min="0.5" max="1.5" step="0.1" value="1" class="accent-brand-600">
+      </div>
+      <div class="control-group">
+        <label for="voice-select" class="block text-sm font-medium text-slate-700">Choose Voice</label>
+        <select id="voice-select" class="border border-white/70 rounded-xl px-3 py-2 shadow-soft bg-white/90 text-slate-700"></select>
+      </div>
+    </div>
+
+    <!-- Gentle Feedback Popup -->
+    <div id="feedback-overlay" class="feedback-overlay fixed inset-0 z-[80]" aria-hidden="true"></div>
+    <div id="feedback-popup" class="feedback-modal fixed inset-0 z-[81] flex items-center justify-center px-4" role="dialog" aria-labelledby="feedback-title" aria-modal="true">
+      <div class="relative w-full max-w-md rounded-[32px] border border-brand-100 bg-white/95 p-8 shadow-[0_28px_68px_-32px_rgba(30,64,175,0.35)]">
+        <button id="feedback-close" type="button" class="absolute top-5 right-5 text-slate-400 transition hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 rounded-full" aria-label="Close feedback popup">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
-      </div>
-      <div class="text-center my-4">
-        <label for="voice-speed" class="block text-gray-700 mb-2">Speech Speed</label>
-        <input id="voice-speed" type="range" min="0.5" max="1.5" step="0.1" value="1" class="w-64">
-      </div>
-      <div class="text-center my-4">
-        <label for="voice-select" class="block text-gray-700 mb-2">Choose Voice</label>
-        <select id="voice-select" class="w-64 border rounded p-2"></select>
+        <div id="feedback-initial" class="space-y-6 text-center">
+          <div class="flex flex-col items-center gap-3">
+            <span class="text-5xl" aria-hidden="true">😄</span>
+            <h3 id="feedback-title" class="text-2xl font-semibold text-slate-900">Are the instructions feeling clear?</h3>
+            <p class="text-base text-slate-600">We love hearing that everything makes sense—and if not, we’ll jump in to help right away.</p>
+          </div>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <button id="feedback-happy" type="button" class="flex-1 rounded-full bg-brand-600 px-6 py-3 font-semibold text-white shadow-soft transition hover:bg-brand-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400">All good! 🎉</button>
+            <button id="feedback-help" type="button" class="flex-1 rounded-full border border-brand-200 bg-white px-6 py-3 font-semibold text-brand-700 shadow-soft transition hover:border-brand-400 hover:text-brand-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-200">I need help</button>
+          </div>
+        </div>
+        <div id="feedback-review" class="hidden space-y-6 text-center">
+          <div class="flex flex-col items-center gap-3">
+            <span class="text-5xl" aria-hidden="true">✨</span>
+            <h3 class="text-2xl font-semibold text-slate-900">Amazing—thank you!</h3>
+            <p class="text-base text-slate-600">A quick 5-star review keeps this small shop brewing new goodies for you.</p>
+          </div>
+          <a href="https://www.etsy.com/shop/SheetsBrewery#reviews" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-brand-600 px-6 py-3 font-semibold text-white shadow-soft transition hover:bg-brand-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400">Leave a 5-star review</a>
+          <button id="feedback-dismiss-happy" type="button" class="inline-flex items-center justify-center rounded-full border border-transparent bg-slate-100 px-6 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-200">Back to the guide</button>
+        </div>
+        <div id="feedback-support" class="hidden space-y-6 text-center">
+          <div class="flex flex-col items-center gap-3">
+            <span class="text-5xl" aria-hidden="true">🤝</span>
+            <h3 class="text-2xl font-semibold text-slate-900">How can we help?</h3>
+            <p class="text-base text-slate-600">Tell us what’s unclear and we’ll walk you through it. We usually reply within a business day.</p>
+          </div>
+          <a href="mailto:hello@sheetsbrewery.com?subject=Help%20with%20Team%20Task%20Tracker" class="inline-flex items-center justify-center rounded-full bg-brand-600 px-6 py-3 font-semibold text-white shadow-soft transition hover:bg-brand-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400">Email our team</a>
+          <button id="feedback-dismiss-help" type="button" class="inline-flex items-center justify-center rounded-full border border-brand-200 bg-white px-6 py-3 text-sm font-medium text-brand-700 shadow-soft transition hover:border-brand-400 hover:text-brand-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-200">Close</button>
+        </div>
+        <div id="confetti-burst" class="pointer-events-none absolute -top-10 left-0 right-0 h-px overflow-visible"></div>
       </div>
     </div>
     </main>
     </div> <!-- END #site-content -->
-</body>
-<script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const body = document.body;
+      const siteContent = document.getElementById("site-content");
+      const passwordOverlay = document.getElementById("password-overlay");
+      const feedbackOverlay = document.getElementById("feedback-overlay");
+      const feedbackPopup = document.getElementById("feedback-popup");
+      const initialView = document.getElementById("feedback-initial");
+      const reviewView = document.getElementById("feedback-review");
+      const supportView = document.getElementById("feedback-support");
+      const happyBtn = document.getElementById("feedback-happy");
+      const helpBtn = document.getElementById("feedback-help");
+      const closeBtn = document.getElementById("feedback-close");
+      const dismissHappy = document.getElementById("feedback-dismiss-happy");
+      const dismissHelp = document.getElementById("feedback-dismiss-help");
+      const confettiContainer = document.getElementById("confetti-burst");
+      const STORAGE_KEY = "feedbackPopupSeen";
+
+      if (!feedbackOverlay || !feedbackPopup) return;
+      if (sessionStorage.getItem(STORAGE_KEY) === "true") return;
+
+      let popupOpened = false;
+      let timeTrigger = null;
+
+      const isLocked = () => {
+        if (!passwordOverlay) return false;
+        const style = window.getComputedStyle(passwordOverlay);
+        return style.display !== "none" && style.visibility !== "hidden";
+      };
+
+      const setView = (view) => {
+        if (!initialView || !reviewView || !supportView) return;
+        initialView.classList.toggle("hidden", view !== "initial");
+        reviewView.classList.toggle("hidden", view !== "review");
+        supportView.classList.toggle("hidden", view !== "support");
+      };
+
+      const launchConfetti = () => {
+        if (!confettiContainer) return;
+        const colors = ["#6366f1", "#f472b6", "#22d3ee", "#facc15", "#a855f7"];
+        for (let i = 0; i < 14; i += 1) {
+          const piece = document.createElement("span");
+          piece.className = "confetti-piece";
+          const left = Math.random() * 100;
+          const xOffset = (Math.random() - 0.5) * 160;
+          piece.style.left = `${left}%`;
+          piece.style.setProperty("--x-move", `${xOffset}px`);
+          piece.style.backgroundColor = colors[i % colors.length];
+          piece.style.animationDelay = `${Math.random() * 0.2}s`;
+          confettiContainer.appendChild(piece);
+          setTimeout(() => piece.remove(), 1400);
+        }
+      };
+
+      const closePopup = () => {
+        body.classList.remove("feedback-popup-open");
+        feedbackOverlay.setAttribute("aria-hidden", "true");
+        document.removeEventListener("keydown", onEscape);
+      };
+
+      const onEscape = (event) => {
+        if (event.key === "Escape") closePopup();
+      };
+
+      const openPopup = () => {
+        if (popupOpened || isLocked() || (siteContent && siteContent.classList.contains("hidden"))) return false;
+        popupOpened = true;
+        sessionStorage.setItem(STORAGE_KEY, "true");
+        setView("initial");
+        body.classList.add("feedback-popup-open");
+        feedbackOverlay.setAttribute("aria-hidden", "false");
+        document.addEventListener("keydown", onEscape);
+        const focusTarget = feedbackPopup.querySelector("button, a");
+        if (focusTarget) focusTarget.focus({ preventScroll: true });
+        if (timeTrigger) clearTimeout(timeTrigger);
+        return true;
+      };
+
+      const attemptOpen = () => {
+        if (popupOpened) return;
+        if (!openPopup()) {
+          timeTrigger = window.setTimeout(attemptOpen, 2000);
+        }
+      };
+
+      timeTrigger = window.setTimeout(attemptOpen, 45000);
+
+      feedbackOverlay.addEventListener("click", closePopup);
+      closeBtn?.addEventListener("click", closePopup);
+
+      happyBtn?.addEventListener("click", () => {
+        setView("review");
+        launchConfetti();
+      });
+
+      helpBtn?.addEventListener("click", () => {
+        setView("support");
+      });
+
+      dismissHappy?.addEventListener("click", closePopup);
+      dismissHelp?.addEventListener("click", closePopup);
+
+      window.showFeedbackPopup = () => {
+        sessionStorage.removeItem(STORAGE_KEY);
+        popupOpened = false;
+        openPopup();
+      };
+    });
+  </script>
+  <script>
   // Mobile nav toggle
   document.addEventListener('DOMContentLoaded', function () {
-    var toggle = document.getElementById('menu-toggle');
-    var menu = document.getElementById('menu-mobile');
-    if (toggle && menu) {
-      toggle.addEventListener('click', function () {
-        menu.classList.toggle('hidden');
+    const glassNav = document.querySelector("nav.glass-nav");
+    const toggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("mobile-nav");
+    const DESKTOP_BREAKPOINT = 1200;
+
+    const setMenuState = (isOpen) => {
+      if (!toggle || !menu) return;
+      menu.classList.toggle("is-visible", isOpen);
+      toggle.setAttribute("aria-expanded", String(isOpen));
+      toggle.setAttribute("aria-label", isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación");
+      menu.setAttribute("aria-hidden", String(!isOpen));
+    };
+
+    if (toggle && menu && glassNav) {
+      setMenuState(false);
+
+      toggle.addEventListener("click", () => {
+        const willOpen = !menu.classList.contains("is-visible");
+        setMenuState(willOpen);
       });
-      // Optional: Hide menu when a link is clicked (for SPA feel)
-      menu.querySelectorAll('a').forEach(function(link) {
-        link.addEventListener('click', function() {
-          menu.classList.add('hidden');
-        });
+
+      menu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => setMenuState(false));
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!menu.classList.contains("is-visible")) return;
+        if (!glassNav.contains(event.target)) {
+          setMenuState(false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && menu.classList.contains("is-visible")) {
+          setMenuState(false);
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= DESKTOP_BREAKPOINT && menu.classList.contains("is-visible")) {
+          setMenuState(false);
+        }
       });
     }
+
     // Desktop nav active link highlight on scroll
     const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll("#desktop-nav a");
+    const anchorLinks = document.querySelectorAll('nav.glass-nav a[href^="#"]');
+
+    function computeNavOffset() {
+      if (!glassNav) return 0;
+      const computedTop = parseFloat(window.getComputedStyle(glassNav).top || "0");
+      const topBuffer = Number.isNaN(computedTop) ? 0 : computedTop;
+      return glassNav.offsetHeight + topBuffer + 12;
+    }
+
+    anchorLinks.forEach(link => {
+      link.addEventListener("click", (event) => {
+        const hash = link.getAttribute("href");
+        if (!hash || hash === "#") return;
+        const target = document.querySelector(hash);
+        if (!target) return;
+        event.preventDefault();
+        const offset = computeNavOffset();
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({
+          top: Math.max(targetPosition, 0),
+          behavior: "smooth",
+        });
+        if (history.replaceState) {
+          history.replaceState(null, "", hash);
+        }
+        if (menu && menu.classList.contains("is-visible")) {
+          setMenuState(false);
+        }
+      });
+    });
+
     window.addEventListener("scroll", () => {
       let current = "";
       sections.forEach(section => {
-        const sectionTop = section.offsetTop - 80;
+        const offset = computeNavOffset();
+        const sectionTop = section.offsetTop - offset - 10;
         if (pageYOffset >= sectionTop) {
           current = section.getAttribute("id");
         }
       });
       navLinks.forEach(link => {
-        link.classList.remove("bg-indigo-100","text-indigo-700","font-semibold");
+        link.classList.remove("is-active");
         if (link.getAttribute("href") === "#" + current) {
-          link.classList.add("bg-indigo-100","text-indigo-700","font-semibold");
+          link.classList.add("is-active");
         }
       });
     });
@@ -880,48 +2360,48 @@
 
     // --- Voice Instructions global state & helpers ---
     // Move these to DOMContentLoaded top scope so all handlers can access
-    const text = `Hi there, and welcome to your Team Task Tracker. I’m going to walk you through everything you see on this page so you can start using it without confusion.
+    const text = `Hi there, and welcome to your Team Task Tracker. I'm going to walk you through everything on this page so you can start using it with confidence.
 
-Step 1. Getting your copy.
-Click the button at the top that says “Get Your Copy.” That creates your personal version of the tracker in Google Sheets. Make sure you’re signed into the Google account you want to use.
+Step 1. Get your copy.
+Click the button at the top that says "Get Your Copy." That creates your personal version of the tracker in Google Sheets. Make sure you're signed into the Google account you want to use.
 
-Step 2. The tabs along the bottom.
-• Home is where you’ll spend most of your time adding and updating tasks.
-• Team Members is where you type in your teammates’ names and emails. That’s what powers the dropdown in Home and makes notifications and calendar invites work.
-• Status Configuration lets you rename statuses so they fit your process. Whatever you change there updates everywhere automatically.
-• Kanban gives you a board view of tasks by status, with borders showing priority at a glance.
-• Timer is where you choose how early before the due date reminders should start, and what time of day those reminders arrive. They’ll keep coming until the task is finished.
-• And Task Central is your control hub — a custom menu built by Sheets Brewery that pulls all the advanced features into one place.
+Step 2. Explore the tabs along the bottom.
+Home is where you'll spend most of your time adding and updating tasks.
+Team Members is where you add names and emails. It powers the assignee dropdown, keeps email notifications working, and handles guest invites for calendar events.
+Status Configuration lets you rename statuses so they match your process, and the changes update automatically across Home, Kanban, stats, and filter views.
+Kanban gives you a board view of tasks by status, with card borders that show priority at a glance.
+Timer is where you choose how early before the due date reminders should start, and what time of day those reminders arrive. They'll keep coming until the task is finished.
+Task Central is a custom menu from Sheets Brewery that keeps every advanced feature in one place.
 
-Step 3. Adding your teammates.
-Go to Team Members and fill out two simple columns: full name in column A, and exact email in column B. The status column updates itself — showing “All Clear” if they have no open tasks, or “Pending” with the count if they do. You can also use the Quick View dropdown at the top‑right to see any teammate’s task list instantly.
+Step 3. Add your teammates.
+Go to Team Members and fill out two simple columns: full name in column A, and exact email in column B. The status column updates itself — it shows "All Clear" if they have no open tasks, or "Pending" with the count if they do. Use the Quick View dropdown in the top right to see any teammate's task list instantly.
 
-Step 4. Creating tasks in Home.
-For each task, pick the team member, write a name and description, set priority, start date, due date, and a status. If it’s something that repeats, just type a number of days in the Recurring column. When you mark it completed — or move it to your final status — the tracker will automatically duplicate it and schedule the next one ahead. At the top of Home, you’ll see counters and a progress bar, and you can hide or show them using the Stats dropdown. You can also use Quick Filter Views under the Data menu to instantly focus on things like overdue tasks, due today, or completed. To go back, just click the little X in the top‑right of the sheet.
+Step 4. Create tasks in Home.
+For each task, pick the team member, add a name and description, set priority, start date, due date, and a status. If it's something that repeats, type a number of days in the Recurring column. When you mark it completed — or move it to your final status — the tracker duplicates it and schedules the next one ahead. Use the predefined filter views under Data → Change view to focus on things like overdue, due today, or upcoming work, and click the little X in the top right of the sheet to go back to the full list.
 
-Step 5. Customizing statuses.
-Open Status Configuration and rename them however you like. Changes will reflect right away in Home, Kanban, stats, and filters.
+Step 5. Customize statuses.
+Open Status Configuration and rename them however you like. Changes appear right away in Home, Kanban, stats, and filters.
 
-Step 6. Using the Kanban board.
-This board updates in real time based on your statuses. You’ll see colored borders for priority: red means high, orange is medium, and yellow is low.
+Step 6. Use the Kanban board.
+This board updates in real time based on your statuses. You'll see colored borders for priority: red means high, orange is medium, and yellow is low.
 
-Step 7. Task Central.
-From the menu bar, you’ll find all the advanced features:
-• Email Notifications — the first time, run Enable Notifications. Google will ask for permissions, and after that, reminders will just work. You can also check status, pause them, or refresh the schedule if you change the reminder time in Timer.
-• Auto‑Assign Tasks spreads tasks evenly by assigning unassigned ones randomly.
-• Show or Hide Completed lets you keep the view clean.
-• Task Row Colors lets you set colors for overdue, due today, and due soon — and it remembers your choices.
-• The Focus Sprint Planner helps you run focused work sessions. It includes Pomodoro and other methods, and there’s a little help icon inside with full guidance.
-• Google Calendar Sync adds tasks with due dates to your calendar and removes them when done. After you give permission once, it syncs automatically every night at midnight. If your teammates don’t see events, they need to open their Google Calendar settings, go to Event Settings, and set “Add invitations to my calendar” to “From everyone.” On mobile, the same option is under Settings → General.
-• There’s also a quick link to leave a review on Etsy, and Help & Support where you can contact us or, if there’s a new update, run Install Latest Version. That one will pop up and guide you step by step — no coding needed.
+Step 7. Work with Task Central.
+From the menu bar, click the ✨ Task Central menu to run automations.
+Focus Sprint Planner launches the deep-work dashboard with timers, sprint goals, and retro notes.
+The Reminders section gives you Enable Daily Emails, the Reminder Control Center, Disable Reminder Emails, and Refresh Notification Schedule — everything you need to start, tune, or pause email digests.
+The Calendar section lets you Open the Calendar Automation Panel, Run Calendar Sync Now, Enable Daily Sync for the overnight update, or Pause Daily Sync when you need a break.
+In Tasks you can Auto-Assign Unassigned Tasks using the capacity rules you set, Show or Hide Completed Rows during meetings, and Update Recurring Tasks Now without waiting for the schedule.
+Appearance → Customize Task Row Colors walks you through updating the color palette across the tracker.
+Help & Support offers Contact Sheets Brewery and Leave a Review on Etsy so you can stay current, get help, or share feedback.
+If you spot 🚀 Update Needed — Click to Refresh at the top of Task Central, run it once to refresh the menu helpers before using the other options.
 
 Step 8. Setup and permissions.
-When you first enable notifications, Google might show an “unverified app” warning. That’s expected for custom tools like this. Just click Advanced, then “Go to Team Task Tracker,” and Allow. The script only connects this sheet with your calendar — nothing else.
+During first-time setup, click any Task Central automation — Enable Daily Emails is a great starting point. Google might show an "unverified app" warning. That's expected for custom tools like this. Click Advanced, then "Go to Team Task Tracker," review the access request, and click Allow. The script only connects this sheet with your calendar.
 
 Step 9. FAQ and troubleshooting.
-If you’re not getting emails, check Task Central to be sure notifications are enabled, teammate emails are correct, and your timezone is set right. If reminders seem late, remember that the script runs within an hour window. If filters are stuck, clear them with the little X at the top. Don’t rename sheets or move columns — the automation depends on them. Completing a task automatically removes its calendar event. And if you don’t see events, check invites, calendar sharing, and run the update manually or wait for the nightly sync.
+If you're not getting emails, check Task Central to be sure notifications are enabled, teammate emails are correct, and your timezone is set right. If reminders seem late, remember that the script runs within a one-hour window. If filters are stuck, clear them with the little X at the top. Don't rename sheets or move columns — the automation depends on them. Completing a task automatically removes its calendar event. And if you don't see events, check invites, calendar sharing, and run the update manually or wait for the overnight sync.
 
-That’s it. You now know how to use every part of your Team Task Tracker. Have fun staying organized, and let the automation do the heavy lifting for you.`;
+That's it. You now know how to use every part of your Team Task Tracker. Have fun staying organized, and let the automation do the heavy lifting for you.`;
 
     let totalTextLen = text.length;
     let isPlaying = false;
@@ -1034,10 +2514,10 @@ That’s it. You now know how to use every part of your Team Task Tracker. Have 
           const container = document.createElement("div");
           container.innerHTML = `
             <div id="voice-timeline" class="text-center my-4 hidden">
-              <input id="timeline-slider" type="range" min="0" max="100" value="0" class="w-3/4">
+              <input id="timeline-slider" type="range" min="0" max="100" value="0" class="w-full max-w-xl mx-auto accent-brand-600">
               <div class="mt-2 space-x-4">
                 <button id="timeline-toggle"
-                  class="px-4 py-2 rounded transition transform hover:scale-110 text-2xl text-gray-700 bg-transparent hover:text-indigo-600"
+                  class="px-4 py-2 rounded transition transform hover:scale-110 text-2xl text-slate-700 bg-transparent hover:text-brand-600"
                   style="background: transparent;">
                   ▶
                 </button>
@@ -1063,7 +2543,7 @@ That’s it. You now know how to use every part of your Team Task Tracker. Have 
           // Initial state: show as stop/pause by default
           toggleBtn.textContent = "⏸";
           toggleBtn.classList.remove("bg-green-500","bg-yellow-500","text-white");
-          toggleBtn.classList.add("text-gray-700");
+          toggleBtn.classList.add("text-slate-700");
           toggleBtn.onclick = function() {
             if (isPlaying && !isPaused) {
               // Currently playing → pause
@@ -1223,3 +2703,5 @@ That’s it. You now know how to use every part of your Team Task Tracker. Have 
     });
   }
 </script>
+</body>
+</html>
