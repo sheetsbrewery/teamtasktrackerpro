@@ -883,9 +883,10 @@
       }
       .gs-doc-icon {
         width: clamp(1.6rem, 1.1rem + 2.5vw, 2.125rem);
-        height: clamp(1.6rem, 1.1rem + 2.5vw, 2.125rem);
+        aspect-ratio: 1 / 1;
+        flex: 0 0 auto;
         border-radius: clamp(0.3rem, 0.25rem + 0.4vw, 0.375rem);
-        background: url("googlesheetsicon.png") center/cover no-repeat;
+        background: url("googlesheetsicon.png") center/contain no-repeat;
         box-shadow: 0 0.75rem 1.5rem -1rem rgba(13, 148, 136, 0.4);
       }
       .gs-title-stack {
