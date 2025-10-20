@@ -1632,14 +1632,7 @@
         </div>
       </div>
 
-      <p class="mb-6 text-slate-600 text-base sm:text-lg max-w-[60rem] mx-auto text-left leading-relaxed">
-        Sheets Brewery custom-built the <span class="font-semibold text-brand-600">Task Central</span> menu so every automation your tracker needs lives in one place. You’ll always find it at the far right of the Google Sheets menu bar, right after <b>Help</b> — exactly as you see here.
-      </p>
-      <p class="mb-10 text-slate-600 text-base sm:text-lg max-w-[60rem] mx-auto text-left leading-relaxed">
-        Use this replica as your quick-start map. Click <span class="font-semibold text-brand-600">Task Central</span> to pop open the simulator, practice the option you need, then repeat the exact click in your live template with confidence.
-      </p>
-
-      <div id="menuContent" class="hidden mt-8">
+      <div id="menuContent" class="hidden mt-8 mb-12">
         <div class="rounded-3xl border border-white/70 bg-white/95 shadow-soft p-5 sm:p-8 text-left">
           <div class="gs-sim-body">
             <div class="gs-dropdown-shell">
@@ -1747,6 +1740,13 @@
           </div>
         </div>
       </div>
+
+      <p class="mb-6 text-slate-600 text-base sm:text-lg max-w-[60rem] mx-auto text-left leading-relaxed">
+        Sheets Brewery custom-built the <span class="font-semibold text-brand-600">Task Central</span> menu so every automation your tracker needs lives in one place. You’ll always find it at the far right of the Google Sheets menu bar, right after <b>Help</b> — exactly as you see here.
+      </p>
+      <p class="mb-10 text-slate-600 text-base sm:text-lg max-w-[60rem] mx-auto text-left leading-relaxed">
+        Use this replica as your quick-start map. Click <span class="font-semibold text-brand-600">Task Central</span> to pop open the simulator, practice the option you need, then repeat the exact click in your live template with confidence.
+      </p>
 
       <div class="rounded-3xl border border-white/70 bg-gradient-to-br from-brand-50 via-white to-brand-100 shadow-soft p-5 sm:p-8 mt-6">
         <div class="rounded-2xl border border-white/60 bg-white/90 p-4 sm:p-5 text-brand-700 font-medium mb-5 text-sm sm:text-base">
@@ -2008,6 +2008,15 @@
             <p><b>You’re an assignee (guest):</b> Assignees with Gmail are auto‑invited as guests. In <b>Google Calendar → Settings → Event Settings → Add invitations to my calendar</b>, choose <b>From everyone</b>. Then accept the invite in your email.</p>
             <p><b>Calendar sharing & visibility:</b> Events live in the sheet owner’s calendar. Make sure that calendar is shared with you and enabled under <b>My calendars</b>.</p>
             <p><b>Run the update:</b> New tasks only appear when you click <b>✨ Task Central → Update Google Calendar Events</b> or during the overnight sync.</p>
+          </div>
+        </details>
+        <details class="accordion-card">
+          <summary>
+            <span class="text-xl">🌎</span>
+            How do I change the calendar timezone?
+          </summary>
+          <div class="accordion-content">
+            <p>Open the sheet, then go to <b>Extensions</b> → <b>Apps Script</b>. Click the <b>⚙️ Settings</b> icon in the left sidebar, choose your timezone under <b>General Settings → Time zone</b>, and save. The overnight sync will use the new timezone on the next run.</p>
           </div>
         </details>
       </div>
