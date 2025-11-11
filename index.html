@@ -1485,9 +1485,20 @@
           </div>
           <div class="rounded-2xl border border-white/70 bg-gradient-to-br from-violet-50 via-white to-fuchsia-100 p-6 shadow-soft transition transform hover:-translate-y-1">
             <h5 class="font-semibold text-slate-900 text-lg mb-2">Recurring</h5>
-            <p class="text-slate-600 leading-relaxed">
-              Enter a number of days in the Recurring column. When the task is marked completed (or moved to your custom final status), it will be duplicated and the new copy scheduled that many days ahead. This automates regular activities without manual re‑entry.
-            </p>
+            <div class="text-slate-600 leading-relaxed space-y-3">
+              <p>
+                <b>Turn it on once.</b> Click any ✨ Task Central option one time to activate the nightly background check. If you’ve already run it before, you’re all set—it stays on.
+              </p>
+              <p>
+                <b>Schedule the repeats.</b> Set the Due Date and type how many days should pass in the Recurring column. When that date arrives, the tracker duplicates the row, pushes the Due Date forward by that number, and keeps going even if the task is still open.
+              </p>
+              <p>
+                <b>Example.</b> Need a Friday status report every week? Make the first Due Date a Friday and enter Recurring = 7. By Saturday morning, the next Friday copy is already queued up.
+              </p>
+              <p>
+                <b>Need it right now?</b> Run <b>Task Central → Update Recurring Tasks Now</b> to create the next copy instantly.
+              </p>
+            </div>
           </div>
         </div>
         <div class="mt-10 space-y-6">
@@ -2014,10 +2025,19 @@
         <details class="accordion-card">
           <summary>
             <span class="text-xl">🌎</span>
+            How do I change the email reminder timezone?
+          </summary>
+          <div class="accordion-content">
+            <p>Go to <b>✨ Task Central → Reminders → Reminder Control Center</b>. Use the link at the bottom to set the correct time zone; this also updates the calendar schedule automatically.</p>
+          </div>
+        </details>
+        <details class="accordion-card">
+          <summary>
+            <span class="text-xl">🗓</span>
             How do I change the calendar timezone?
           </summary>
           <div class="accordion-content">
-            <p>Open the sheet, then go to <b>Extensions</b> → <b>Apps Script</b>. Click the <b>⚙️ Settings</b> icon in the left sidebar, choose your timezone under <b>General Settings → Time zone</b>, and save. The overnight sync will use the new timezone on the next run.</p>
+            <p>Open <b>✨ Task Central → Calendar → Open Calendar Automation Panel</b>. Update the time zone from that panel, and reminder emails will stay in sync with the calendar.</p>
           </div>
         </details>
       </div>
@@ -2387,7 +2407,7 @@ Step 3. Add your teammates.
 Go to Team Members and fill out two simple columns: full name in column A, and exact email in column B. The status column updates itself — it shows "All Clear" if they have no open tasks, or "Pending" with the count if they do. Use the Quick View dropdown in the top right to see any teammate's task list instantly.
 
 Step 4. Create tasks in Home.
-For each task, pick the team member, add a name and description, set priority, start date, due date, and a status. If it's something that repeats, type a number of days in the Recurring column. When you mark it completed — or move it to your final status — the tracker duplicates it and schedules the next one ahead. Use the predefined filter views under Data → Change view to focus on things like overdue, due today, or upcoming work, and click the little X in the top right of the sheet to go back to the full list.
+For each task, pick the team member, add a name and description, set priority, start date, due date, and a status. When something should repeat, type the frequency in days in the Recurring column and the template schedules the next copy the moment the Due Date arrives, even if the task is still marked open. Example: Due Date on Monday + Recurring = 7 instantly creates the next Monday version. Use the predefined filter views under Data → Change view to focus on things like overdue, due today, or upcoming work, and click the little X in the top right of the sheet to go back to the full list.
 
 Step 5. Customize statuses.
 Open Status Configuration and rename them however you like. Changes appear right away in Home, Kanban, stats, and filters.
