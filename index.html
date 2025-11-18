@@ -1153,6 +1153,92 @@
           transform: translate3d(var(--x-move, 60px), 160px, 0) rotate(45deg);
         }
       }
+      .faq-search-panel {
+        border: 1px solid var(--surface-border);
+        border-radius: var(--radius);
+        padding: clamp(1.25rem, 0.9rem + 1.5vw, 2.25rem);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(255, 255, 255, 0.95));
+        box-shadow: var(--shadow-soft);
+      }
+      .faq-search-input {
+        width: 100%;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        padding: 0.9rem 1rem 0.9rem 3rem;
+        background: rgba(255, 255, 255, 0.96);
+        color: #0f172a;
+        font-size: 1rem;
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+      }
+      .faq-search-input::placeholder {
+        color: rgba(71, 85, 105, 0.7);
+      }
+      .faq-search-input:focus {
+        outline: none;
+        border-color: rgba(99, 102, 241, 0.6);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+      }
+      .filter-chip {
+        border-radius: 999px;
+        padding: 0.45rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: none;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        color: #475569;
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .filter-chip:hover {
+        border-color: rgba(99, 102, 241, 0.45);
+      }
+      .filter-chip.active {
+        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+        color: #ffffff;
+        border-color: transparent;
+        box-shadow: 0 18px 40px -22px rgba(79, 70, 229, 0.9);
+      }
+      .category-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border-radius: 999px;
+        padding: 0.35rem 0.9rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .category-chip[data-variant="automations"] {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .category-chip[data-variant="emails"] {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      .category-chip[data-variant="calendars"] {
+        background: #d1fae5;
+        color: #047857;
+      }
+      .category-chip[data-variant="personalization"] {
+        background: #fce7f3;
+        color: #be185d;
+      }
+      .faq-highlight {
+        background: #fde68a;
+        color: #92400e;
+        border-radius: 0.3rem;
+        padding: 0.05rem 0.25rem;
+      }
+      .faq-empty-state {
+        border: 1px dashed rgba(148, 163, 184, 0.5);
+        border-radius: 1.5rem;
+        padding: clamp(1.5rem, 1rem + 1vw, 2rem);
+        background: rgba(255, 255, 255, 0.9);
+        text-align: center;
+        color: #64748b;
+      }
     </style>
     <style>
       html {
@@ -1272,7 +1358,7 @@
             id="menu-toggle"
             class="nav-toggle"
             type="button"
-            aria-label="Abrir menú de navegación"
+            aria-label="Open navigation menu"
             aria-expanded="false"
             aria-controls="mobile-nav"
           >
@@ -1511,6 +1597,95 @@
         </div>
       </div>
     </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.getElementById("faq-search");
+        const faqItems = Array.from(document.querySelectorAll("[data-faq-item]"));
+        const filterChips = Array.from(document.querySelectorAll(".filter-chip"));
+        const faqGroups = Array.from(document.querySelectorAll("[data-category-group]"));
+        const emptyState = document.getElementById("faq-empty-state");
+        if (!searchInput || !faqItems.length) return;
+
+        let activeFilter = "all";
+
+        const escapeRegExp = (str = "") => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        faqItems.forEach((item) => {
+          const questionEl = item.querySelector(".question-text");
+          const contentEl = item.querySelector(".accordion-content");
+          if (questionEl && !questionEl.dataset.originalText) {
+            questionEl.dataset.originalText = questionEl.innerHTML;
+          }
+          if (contentEl && !contentEl.dataset.originalHtml) {
+            contentEl.dataset.originalHtml = contentEl.innerHTML;
+          }
+          item.dataset.questionText = questionEl ? questionEl.textContent : "";
+          item.dataset.answerText = contentEl ? contentEl.textContent : "";
+        });
+
+        const highlightTerm = (term) => {
+          const hasTerm = Boolean(term);
+          const regex = hasTerm ? new RegExp(`(${escapeRegExp(term)})`, "gi") : null;
+          faqItems.forEach((item) => {
+            const questionEl = item.querySelector(".question-text");
+            const contentEl = item.querySelector(".accordion-content");
+            const questionBase = questionEl?.dataset.originalText || "";
+            const contentBase = contentEl?.dataset.originalHtml || "";
+            if (questionEl) {
+              questionEl.innerHTML = hasTerm ? questionBase.replace(regex, '<mark class="faq-highlight">$1</mark>') : questionBase;
+            }
+            if (contentEl) {
+              contentEl.innerHTML = hasTerm ? contentBase.replace(regex, '<mark class="faq-highlight">$1</mark>') : contentBase;
+            }
+          });
+        };
+
+        const matchesCategory = (item) => {
+          if (activeFilter === "all") return true;
+          const categories = (item.dataset.category || "")
+            .split(",")
+            .map((cat) => cat.trim().toLowerCase())
+            .filter(Boolean);
+          return categories.includes(activeFilter);
+        };
+
+        const updateCategoryGroups = () => {
+          faqGroups.forEach((group) => {
+            const visibleItems = group.querySelectorAll("[data-faq-item]:not(.hidden)").length;
+            group.classList.toggle("hidden", visibleItems === 0);
+          });
+        };
+
+        const filterFaqs = () => {
+          const term = (searchInput.value || "").trim().toLowerCase();
+          let visibleCount = 0;
+          faqItems.forEach((item) => {
+            const haystack = `${item.dataset.questionText || ""} ${item.dataset.answerText || ""} ${item.dataset.tags || ""}`.toLowerCase();
+            const matchesSearch = term === "" || haystack.includes(term);
+            const shouldShow = matchesSearch && matchesCategory(item);
+            item.classList.toggle("hidden", !shouldShow);
+            if (shouldShow) visibleCount++;
+          });
+          highlightTerm(term);
+          updateCategoryGroups();
+          if (emptyState) {
+            emptyState.classList.toggle("hidden", visibleCount !== 0);
+          }
+        };
+
+        filterChips.forEach((chip) => {
+          chip.addEventListener("click", () => {
+            filterChips.forEach((btn) => btn.classList.toggle("active", btn === chip));
+            activeFilter = (chip.dataset.filter || "all").toLowerCase();
+            filterFaqs();
+          });
+        });
+
+        searchInput.addEventListener("input", filterFaqs);
+        filterFaqs();
+      });
+    </script>
 
     <!-- Step 5: Status Configuration -->
     <section id="status" class="section-block fade-in">
@@ -1946,100 +2121,324 @@
 
     <!-- FAQ -->
     <section id="faq" class="section-block fade-in">
-      <div class="mx-auto max-w-3xl space-y-4">
-        <h3 class="mb-6">
-          ❓ Step 9: FAQ & Troubleshooting
-        </h3>
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">🔒</span>
-            Why does Google show "unverified app"?
-          </summary>
-          <div class="accordion-content space-y-3">
-            <p>It’s Google’s standard security warning for apps that haven’t undergone full verification. This doesn’t mean it’s unsafe. Here’s what to do:</p>
-            <ol class="list-decimal pl-6 space-y-1">
-              <li>On the warning screen, scroll down and click <b>Advanced</b>.</li>
-              <li>Click <i>Go to Team Task Tracker (unsafe)</i> to continue.</li>
-              <li>Review the permissions requested and click <b>Allow</b>.</li>
-            </ol>
-            <p>The script only interacts with your spreadsheet and Google Calendar. No other data is touched.</p>
+      <div class="mx-auto max-w-4xl space-y-8">
+        <div class="text-center space-y-3">
+          <h3 class="text-3xl font-semibold text-slate-900">
+            ❓ Step 9: FAQ & Troubleshooting
+          </h3>
+          <p class="text-base text-slate-600">
+            Find the right answer faster—scan by topic or filter instantly.
+          </p>
+        </div>
+        <div class="faq-search-panel space-y-4">
+          <div class="space-y-1">
+            <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+              Answer finder
+            </p>
+            <p class="text-sm text-slate-600">
+              Type a keyword or tap a quick filter to show only matching questions.
+            </p>
           </div>
-        </details>
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">📧</span>
-            I’m not getting reminder emails—what should I check?
-          </summary>
-          <div class="accordion-content">
-            <p>Verify that notifications are enabled in Task Central, ensure email addresses are correct in the Team Members sheet, and confirm your timezone settings are accurate.</p>
+          <div class="relative">
+            <span class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-lg text-slate-400">
+              🔍
+            </span>
+            <input
+              id="faq-search"
+              type="search"
+              class="faq-search-input"
+              placeholder="Search “reminders”, “calendar”, “language”…"
+              aria-label="Search for answers in the FAQ section"
+              autocomplete="off"
+            />
           </div>
-        </details>
-        <!-- FAQ ADDITIONS -->
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">⏰</span>
-            My reminders are late — what’s the timing window?
-          </summary>
-          <div class="accordion-content">
-            <p>If you pick hour “7,” the script runs sometime between <b>7:00–8:00 AM</b> each day. Adjust the hour in the <b>Timer</b> tab if needed.</p>
+          <div class="flex flex-wrap gap-2" role="group" aria-label="FAQ quick filters">
+            <button type="button" class="filter-chip active" data-filter="all">
+              All
+            </button>
+            <button type="button" class="filter-chip" data-filter="permissions">
+              Permissions
+            </button>
+            <button type="button" class="filter-chip" data-filter="automations">
+              Automations
+            </button>
+            <button type="button" class="filter-chip" data-filter="emails">
+              Emails
+            </button>
+            <button type="button" class="filter-chip" data-filter="calendars">
+              Calendars
+            </button>
+            <button type="button" class="filter-chip" data-filter="personalization">
+              Personalization
+            </button>
           </div>
-        </details>
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">🧹</span>
-            My filters aren’t cleared — how do I reset the view?
-          </summary>
-          <div class="accordion-content">
-            <p>Click the little <b>✖</b> in the top‑right of your sheet to clear any active filter and show all rows again.</p>
+        </div>
+        <div class="space-y-10" id="faq-collection">
+          <div class="faq-category space-y-4" data-category-group="automations">
+            <div class="flex flex-col gap-2">
+              <span class="category-chip" data-variant="automations">Automations</span>
+              <div>
+                <h4 class="text-xl font-semibold text-slate-900">Automations & Setup</h4>
+                <p class="text-sm text-slate-500">
+                  Handle verification prompts, keep the structure intact, and reset your view in seconds.
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="automations,permissions"
+                data-tags="google,permissions,security,unverified,advanced"
+              >
+                <summary>
+                  <span class="text-xl">🔒</span>
+                  <span class="question-text">Why does Google show "unverified app"?</span>
+                </summary>
+                <div class="accordion-content space-y-3">
+                  <p>It’s Google’s standard security warning for apps that haven’t undergone full verification. This doesn’t mean it’s unsafe. Here’s what to do:</p>
+                  <ol class="list-decimal pl-6 space-y-1">
+                    <li>On the warning screen, scroll down and click <b>Advanced</b>.</li>
+                    <li>Click <i>Go to Team Task Tracker (unsafe)</i> to continue.</li>
+                    <li>Review the permissions requested and click <b>Allow</b>.</li>
+                  </ol>
+                  <p>The script only interacts with your spreadsheet and Google Calendar. No other data is touched.</p>
+                </div>
+              </details>
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="automations"
+                data-tags="filters,clear,view,reset"
+              >
+                <summary>
+                  <span class="text-xl">🧹</span>
+                  <span class="question-text">My filters aren’t cleared — how do I reset the view?</span>
+                </summary>
+                <div class="accordion-content">
+                  <p>Click the little <b>✖</b> in the top-right of your sheet to clear any active filter and show all rows again.</p>
+                </div>
+              </details>
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="automations"
+                data-tags="structure,columns,sheets,rename,automation"
+              >
+                <summary>
+                  <span class="text-xl">🛠</span>
+                  <span class="question-text">Can I rename sheets or move columns?</span>
+                </summary>
+                <div class="accordion-content">
+                  <p>Not by default — the scripts look for the tabs <b>Home 🏠</b>, <b>Team Members 👥</b>, and <b>Timer ⏰</b>, plus specific column spots. Renaming a sheet or shifting key columns will break the automation.</p>
+                </div>
+              </details>
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="automations,calendars"
+                data-tags="complete,calendar,events,automation"
+              >
+                <summary>
+                  <span class="text-xl">✅</span>
+                  <span class="question-text">What happens when I complete a task?</span>
+                </summary>
+                <div class="accordion-content">
+                  <p>The related Google Calendar event is removed automatically, keeping your schedule clean.</p>
+                </div>
+              </details>
+            </div>
           </div>
-        </details>
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">🛠</span>
-            Can I rename sheets or move columns?
-          </summary>
-          <div class="accordion-content">
-            <p>Not by default — the scripts look for the tabs <b>Home 🏠</b>, <b>Team Members 👥</b>, and <b>Timer ⏰</b>, plus specific column spots. Renaming a sheet or shifting key columns will break the automation.</p>
+          <div class="faq-category space-y-4" data-category-group="emails">
+            <div class="flex flex-col gap-2">
+              <span class="category-chip" data-variant="emails">Emails</span>
+              <div>
+                <h4 class="text-xl font-semibold text-slate-900">Emails & Reminders</h4>
+                <p class="text-sm text-slate-500">
+                  Troubleshoot sending, timing, and the basics that keep reminders in your inbox.
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="emails"
+                data-tags="email,reminders,notifications"
+              >
+                <summary>
+                  <span class="text-xl">📧</span>
+                  <span class="question-text">I’m not getting reminder emails—what should I check?</span>
+                </summary>
+                <div class="accordion-content">
+                  <p>Verify that notifications are enabled in Task Central, ensure email addresses are correct in the Team Members sheet, and confirm your timezone settings are accurate.</p>
+                </div>
+              </details>
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="emails"
+                data-tags="reminders,late,timing,timer"
+              >
+                <summary>
+                  <span class="text-xl">⏰</span>
+                  <span class="question-text">My reminders are late — what’s the timing window?</span>
+                </summary>
+                <div class="accordion-content">
+                  <p>If you pick hour “7,” the script runs sometime between <b>7:00–8:00 AM</b> each day. Adjust the hour in the <b>Timer</b> tab if needed.</p>
+                </div>
+              </details>
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="emails,calendars"
+                data-tags="timezone,email,reminder"
+              >
+                <summary>
+                  <span class="text-xl">🌎</span>
+                  <span class="question-text">How do I change the email reminder timezone?</span>
+                </summary>
+                <div class="accordion-content">
+                  <p>Go to <b>✨ Task Central → Reminders → Reminder Control Center</b>. Use the link at the bottom to set the correct time zone; this also updates the calendar schedule automatically.</p>
+                </div>
+              </details>
+            </div>
           </div>
-        </details>
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">✅</span>
-            What happens when I complete a task?
-          </summary>
-          <div class="accordion-content">
-            <p>The related Google Calendar event is removed automatically, keeping your schedule clean.</p>
+          <div class="faq-category space-y-4" data-category-group="calendars">
+            <div class="flex flex-col gap-2">
+              <span class="category-chip" data-variant="calendars">Calendars</span>
+              <div>
+                <h4 class="text-xl font-semibold text-slate-900">Calendars & Scheduling</h4>
+                <p class="text-sm text-slate-500">
+                  Check event visibility and keep every time zone in sync.
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="calendars,permissions"
+                data-tags="calendar,events,invites,visibility"
+              >
+                <summary>
+                  <span class="text-xl">📆</span>
+                  <span class="question-text">Why don’t I see calendar events?</span>
+                </summary>
+                <div class="accordion-content space-y-2">
+                  <p><b>You’re an assignee (guest):</b> Assignees with Gmail are auto-invited as guests. In <b>Google Calendar → Settings → Event Settings → Add invitations to my calendar</b>, choose <b>From everyone</b>. Then accept the invite in your email.</p>
+                  <p><b>Calendar sharing & visibility:</b> Events live in the sheet owner’s calendar. Make sure that calendar is shared with you and enabled under <b>My calendars</b>.</p>
+                  <p><b>Run the update:</b> New tasks only appear when you click <b>✨ Task Central → Update Google Calendar Events</b> or during the overnight sync.</p>
+                </div>
+              </details>
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="calendars"
+                data-tags="timezone,calendar,schedule"
+              >
+                <summary>
+                  <span class="text-xl">🗓</span>
+                  <span class="question-text">How do I change the calendar timezone?</span>
+                </summary>
+                <div class="accordion-content">
+                  <p>Open <b>✨ Task Central → Calendar → Open Calendar Automation Panel</b>. Update the time zone from that panel, and reminder emails will stay in sync with the calendar.</p>
+                </div>
+              </details>
+            </div>
           </div>
-        </details>
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">📆</span>
-            Why don’t I see calendar events?
-          </summary>
-          <div class="accordion-content space-y-2">
-            <p><b>You’re an assignee (guest):</b> Assignees with Gmail are auto‑invited as guests. In <b>Google Calendar → Settings → Event Settings → Add invitations to my calendar</b>, choose <b>From everyone</b>. Then accept the invite in your email.</p>
-            <p><b>Calendar sharing & visibility:</b> Events live in the sheet owner’s calendar. Make sure that calendar is shared with you and enabled under <b>My calendars</b>.</p>
-            <p><b>Run the update:</b> New tasks only appear when you click <b>✨ Task Central → Update Google Calendar Events</b> or during the overnight sync.</p>
+          <div class="faq-category space-y-4" data-category-group="personalization">
+            <div class="flex flex-col gap-2">
+              <span class="category-chip" data-variant="personalization">Personalization</span>
+              <div>
+                <h4 class="text-xl font-semibold text-slate-900">Personalize your emails</h4>
+                <p class="text-sm text-slate-500">
+                  Tweak the language, buttons, and sender name so reminders reflect your brand.
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="personalization,emails"
+                data-tags="language,email settings,personalization"
+              >
+                <summary>
+                  <span class="text-xl">🌐</span>
+                  <span class="question-text">How do I change the language of the reminder email?</span>
+                </summary>
+                <div class="accordion-content space-y-3">
+                  <p>Add a lightweight control tab so the script knows your preferred language.</p>
+                  <ol class="list-decimal pl-6 space-y-1">
+                    <li>Create a new sheet tab named exactly <b>Email Settings</b>.</li>
+                    <li>Column C is the only required column: put <b>Language</b> in <b>C1</b> (optional, just a label) and type your target language in <b>C2</b>.</li>
+                    <li>In C2, use any recognized name or 2-letter code from the supported list below (the match is case-insensitive).</li>
+                  </ol>
+                  <p><b>Available languages right now:</b></p>
+                  <ul class="list-disc pl-6 space-y-1 text-slate-600">
+                    <li><code>Spanish / es</code></li>
+                    <li><code>English / en</code></li>
+                    <li><code>Vietnamese / vi</code></li>
+                    <li><code>Chinese / zh</code></li>
+                    <li><code>Hindi / hi</code></li>
+                    <li><code>Arabic / ar</code></li>
+                    <li><code>Portuguese / pt</code></li>
+                    <li><code>Bengali / bn</code></li>
+                    <li><code>Russian / ru</code></li>
+                    <li><code>Japanese / ja</code></li>
+                    <li><code>German / de</code></li>
+                    <li><code>French / fr</code></li>
+                    <li><code>Korean / ko</code></li>
+                  </ul>
+                  <p>If C2 is blank the system falls back to English, so feel free to experiment until you like the preview.</p>
+                  <p>If the language you need isn’t listed, just message me and I’ll add it to the matcher for you.</p>
+                </div>
+              </details>
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="personalization"
+                data-tags="button,dashboard,email settings,layout"
+              >
+                <summary>
+                  <span class="text-xl">📮</span>
+                  <span class="question-text">How do I hide the “Open Dashboard” button?</span>
+                </summary>
+                <div class="accordion-content space-y-3">
+                  <p>Create a helper tab named exactly <b>Email Settings</b> so you can control that button without touching the Apps Script:</p>
+                  <ol class="list-decimal pl-6 space-y-1">
+                    <li><b>Column B</b>: set <b>B1</b> to “Hide Open Dashboard Button” and type <b>TRUE</b> or <b>FALSE</b> in <b>B2</b>. Use <b>TRUE</b> to hide the button from outgoing reminders; leave it blank or type <b>FALSE</b> to keep it visible.</li>
+                  </ol>
+                  <p>You can mix these settings however you like—only the cells you fill in will override the default email layout.</p>
+                </div>
+              </details>
+              <details
+                class="accordion-card"
+                data-faq-item
+                data-category="personalization"
+                data-tags="sender,email,name"
+              >
+                <summary>
+                  <span class="text-xl">✉️</span>
+                  <span class="question-text">How do I change the sender name that appears in the email?</span>
+                </summary>
+                <div class="accordion-content space-y-3">
+                  <p>Create a helper tab named exactly <b>Email Settings</b> so you can override the display name:</p>
+                  <ol class="list-decimal pl-6 space-y-1">
+                    <li><b>Column A</b>: put “Sender Name” in <b>A1</b>.</li>
+                    <li>Enter the name you want recipients to see in <b>A2</b> (for example, “Project Coordinator”).</li>
+                  </ol>
+                  <p>That value replaces the default “Task Pilot 365” sender label in every reminder going forward.</p>
+                </div>
+              </details>
+            </div>
           </div>
-        </details>
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">🌎</span>
-            How do I change the email reminder timezone?
-          </summary>
-          <div class="accordion-content">
-            <p>Go to <b>✨ Task Central → Reminders → Reminder Control Center</b>. Use the link at the bottom to set the correct time zone; this also updates the calendar schedule automatically.</p>
-          </div>
-        </details>
-        <details class="accordion-card">
-          <summary>
-            <span class="text-xl">🗓</span>
-            How do I change the calendar timezone?
-          </summary>
-          <div class="accordion-content">
-            <p>Open <b>✨ Task Central → Calendar → Open Calendar Automation Panel</b>. Update the time zone from that panel, and reminder emails will stay in sync with the calendar.</p>
-          </div>
-        </details>
+        </div>
+        <div id="faq-empty-state" class="faq-empty-state hidden">
+          <p class="font-semibold text-slate-700">No matches found 🤔</p>
+          <p class="text-sm text-slate-500 mt-2">Try another keyword or switch back to the “All” filter.</p>
+        </div>
       </div>
     </section>
 
@@ -2244,7 +2643,7 @@
       if (!toggle || !menu) return;
       menu.classList.toggle("is-visible", isOpen);
       toggle.setAttribute("aria-expanded", String(isOpen));
-      toggle.setAttribute("aria-label", isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación");
+      toggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
       menu.setAttribute("aria-hidden", String(!isOpen));
     };
 
@@ -2631,10 +3030,10 @@ That's it. You now know how to use every part of your Team Task Tracker. Have fu
     const bannerBtn = document.getElementById("voice-banner");
     if (bannerBtn && voiceButton) {
       bannerBtn.addEventListener("click", () => {
-        // Reproducir narración inmediatamente
+        // Immediately trigger narration
         voiceButton.click();
 
-        // Hacer scroll suave hasta la sección completa de controles de voz
+        // Smooth scroll to the full voice controls section
         const controlsSection = document.getElementById("voice-controls") || voiceButton;
         controlsSection.scrollIntoView({ behavior: "smooth", block: "start" });
       });
