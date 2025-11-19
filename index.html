@@ -2230,7 +2230,14 @@
                   <span class="question-text">Can I rename sheets or move columns?</span>
                 </summary>
                 <div class="accordion-content">
-                  <p>Not by default — the scripts look for the tabs <b>Home 🏠</b>, <b>Team Members 👥</b>, and <b>Timer ⏰</b>, plus specific column spots. Renaming a sheet or shifting key columns will break the automation.</p>
+                  <p><b>Tabs stay put.</b> Automations look for the original tabs (<b>Home 🏠</b>, <b>Team Members 👥</b>, <b>Timer ⏰</b>), so don&rsquo;t rename them.</p>
+                  <p><b>Use the hidden map.</b> We built a helper tab called <b>Dynamic Position</b> so you can move columns without breaking anything.</p>
+                  <ol class="list-decimal pl-6 space-y-1">
+                    <li>Click the three horizontal lines (<i>All sheets</i>) in the bottom-left corner of Google Sheets.</li>
+                    <li>Select <i>Dynamic Position</i> to unhide it.</li>
+                    <li>After moving a core column (AssignedTo, TaskName, Description, etc.), change its letter in the Field → Position table so it matches the new column.</li>
+                  </ol>
+                  <p><b>Keep it tidy.</b> This protects email reminders, Google Calendar sync, and the Kanban board. You can add your own columns on <b>Home 🏠</b>, merge/unmerge cells, and adjust formatting, but only map the fields already listed in <b>Dynamic Position</b> — new custom fields should stay off that tab. Take it slow, double-check the map after every change, and you&rsquo;ll stay in sync.</p>
                 </div>
               </details>
               <details
