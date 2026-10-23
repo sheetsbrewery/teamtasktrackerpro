@@ -1246,49 +1246,11 @@
         scroll-padding-top: 5rem; /* Adjust to height of sticky nav */
       }
     </style>
-    <script>
-      (function () {
-        try {
-          if (localStorage.getItem("siteUnlocked") === "true") {
-            document.documentElement.classList.add("site-unlocked");
-          }
-        } catch (e) {
-          /* Ignore storage access issues and fall back to overlay */
-        }
-      })();
-    </script>
   </head>
   <body class="font-sans antialiased text-slate-900">
 
-    <!-- Password Overlay -->
-    <div id="password-overlay" class="fixed inset-0 flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-xl z-50 px-4">
-      <div id="lock-icon" class="text-6xl mb-6 text-brand-500 transition-transform duration-700">
-        🔒
-      </div>
-      <div class="relative mb-4 w-64">
-        <input id="password-input" type="password" placeholder="Enter password"
-          class="px-4 py-3 border border-white/70 rounded-2xl w-full bg-white/90 shadow-soft focus:outline-none focus:ring-2 focus:ring-brand-500 pr-10 text-slate-700 placeholder-slate-400" />
-        <button type="button" id="toggle-password"
-          class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-brand-600 focus:outline-none"
-          aria-label="Show password">
-          <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-        </button>
-      </div>
-      <button id="password-button"
-        class="inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-brand-500 via-brand-600 to-brand-700 shadow-soft transition transform hover:-translate-y-1">
-        Unlock
-      </button>
-      <p id="password-error" class="text-red-500 mt-3 hidden">Incorrect password, try again.</p>
-    </div>
-
     <!-- Main Site Content (hidden until unlocked) -->
-    <div id="site-content" class="hidden">
+    <div id="site-content">
 
     <!-- Hero -->
     <header id="top" class="hero fade-in text-center text-white">
@@ -3064,80 +3026,6 @@ That's it. You now know how to use every part of your Team Task Tracker. Have fu
     }
 
   });
-</script>
-<script>
-  // --- Password Overlay Logic ---
-  const PASSWORD = "sheetsbrewery"; // Change as needed
-  const overlay = document.getElementById("password-overlay");
-  const lockIcon = document.getElementById("lock-icon");
-  const passInput = document.getElementById("password-input");
-  const passButton = document.getElementById("password-button");
-  const errorMsg = document.getElementById("password-error");
-  const siteContent = document.getElementById("site-content");
-
-  // If already unlocked in localStorage, hide overlay and show site content
-  if (localStorage.getItem("siteUnlocked") === "true") {
-    if (overlay) overlay.style.display = "none";
-    if (siteContent) siteContent.classList.remove("hidden");
-  }
-
-  function unlock() {
-    if (passInput.value === PASSWORD) {
-      // Animate lock opening with CSS keyframes
-      lockIcon.textContent = "🔓";
-      lockIcon.classList.add("text-green-500");
-      lockIcon.style.animation = "lockBounce 0.6s ease, lockShake 0.8s ease";
-      setTimeout(() => {
-        overlay.style.display = "none";
-        if (siteContent) siteContent.classList.remove("hidden");
-        localStorage.setItem("siteUnlocked", "true");
-        // Reset animation after it's done
-        lockIcon.style.animation = "";
-      }, 800);
-    } else {
-      // Animate shake in red for incorrect password
-      lockIcon.classList.add("text-red-500");
-      lockIcon.style.animation = "lockShake 0.6s ease";
-      setTimeout(() => {
-        lockIcon.classList.remove("text-red-500");
-        lockIcon.style.animation = "";
-      }, 600);
-      errorMsg.classList.remove("hidden");
-    }
-  }
-
-  passButton.addEventListener("click", unlock);
-  passInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") unlock();
-  });
-
-  // Password eye toggle logic
-  const togglePassword = document.getElementById("toggle-password");
-  if (togglePassword) {
-    togglePassword.addEventListener("click", () => {
-      if (passInput.type === "password") {
-        passInput.type = "text";
-        togglePassword.setAttribute("aria-label", "Hide password");
-        togglePassword.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.965 9.965 0 012.343-3.993M9.88 9.88a3 3 0 104.24 4.24M6.1 6.1l11.8 11.8" />
-          </svg>`;
-      } else {
-        passInput.type = "password";
-        togglePassword.setAttribute("aria-label", "Show password");
-        togglePassword.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>`;
-      }
-    });
-  }
 </script>
 </body>
 </html>
